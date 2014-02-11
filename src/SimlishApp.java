@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -25,6 +26,7 @@ public class SimlishApp implements ActionListener {
 	private JTextArea textPane;
 	private File candidateSimlish;
 	private SimlishParser parser;
+	private SimlishTokenizer tokenizer;
 
 	/**
 	 * Launch the application.
@@ -53,8 +55,9 @@ public class SimlishApp implements ActionListener {
 
 	/**
 	 * Create the frame.
+	 * @throws Exception 
 	 */
-	public SimlishApp() {
+	public SimlishApp() throws Exception {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 600, 600);
 		contentPane = new JPanel();
@@ -93,6 +96,7 @@ public class SimlishApp implements ActionListener {
 		btnLoadFile.addActionListener(this);
 		
 		parser = new SimlishParser();
+		tokenizer = new SimlishTokenizer();
 	}
 
 	@Override
@@ -103,6 +107,18 @@ public class SimlishApp implements ActionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 candidateSimlish = fc.getSelectedFile();
                 parser.setFile(candidateSimlish);
+                textPane.append("Interpreting "+candidateSimlish.getName()+"...\n");
+                
+                String test = " sin(x) * (1 - var_12) ";
+                try {
+                	tokenizer.tokenize(test);
+                	for ( Entry<String,String> thing : tokenizer.getTokens().entrySet() )
+                		textPane.append("" + thing.getValue() + " " + thing.getKey()+"\n");
+                } catch (ParserException p) {
+                	textPane.append(p.getMessage());
+                }
+                
+                
             }
         } 
 	}	
