@@ -2,13 +2,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SimlishTokenizer {
-	File reservedWords = new File("reservedWords.txt"); //list of keywords
-	HashMap<String,String> tokenList = new HashMap<String,String>(); 
+	File reservedWords = new File("reservedWords.txt"); //list of keywords	
+	LinkedList<Token> tokenList = new LinkedList<Token>(); 
 	HashMap<Pattern,String> infoList = new HashMap<Pattern,String>(); 
 	
 	public SimlishTokenizer() throws Exception {
@@ -43,15 +44,16 @@ public class SimlishTokenizer {
 					match = true;
 					String tok = m.group().trim();
 					s = m.replaceFirst("").trim();
-					tokenList.put(tok,thing.getValue());
+					tokenList.add( new Token(tok,thing.getValue()) );
 					break;
 				}
 			} if (!match) 
 				throw new ParserException("Unexpected character in input: "+s);
+			System.out.println(tokenList.size());
 		}
 	}
 	
-	public HashMap<String,String> getTokens() {
+	public LinkedList<Token> getTokens() {
 		return tokenList;
 	}
 }

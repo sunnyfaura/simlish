@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.Map.Entry;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +17,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JSplitPane;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 
 public class SimlishApp implements ActionListener {
@@ -23,7 +27,7 @@ public class SimlishApp implements ActionListener {
 	private JPanel contentPane;
 	private JButton btnLoadFile;
 	private JFileChooser fc;
-	private JTextArea textPane;
+	private JTextArea textArea, textArea_1;
 	private File candidateSimlish;
 	private SimlishParser parser;
 	private SimlishTokenizer tokenizer;
@@ -46,8 +50,8 @@ public class SimlishApp implements ActionListener {
 	
 	public void createGUI() {
 		frame.addWindowFocusListener(new WindowAdapter() {
-		    public void windowGainedFocus(WindowEvent e) {
-		        textPane.requestFocusInWindow();
+			public void windowGainedFocus(WindowEvent e) {
+		        textArea.requestFocusInWindow();
 		    }
 		});
 		frame.setVisible(true);
@@ -70,16 +74,21 @@ public class SimlishApp implements ActionListener {
 		panel.setLayout(new CardLayout(0, 0));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		panel.add(tabbedPane, "name_12620652033253");
+		panel.add(tabbedPane, "name_25154387111841");
 		
-		textPane = new JTextArea();
-		textPane.setEditable(false);
-		tabbedPane.addTab("Interpreter", null, textPane, null);
-		textPane.setWrapStyleWord(false);
+		JScrollPane scrollPane = new JScrollPane();
+		tabbedPane.addTab("New tab", null, scrollPane, null);
 		
-		JTextArea textPane_1 = new JTextArea();
-		textPane_1.setEditable(false);
-		tabbedPane.addTab("Tokenizer", null, textPane_1, null);
+		textArea = new JTextArea();
+		textArea.setEditable(false);
+		scrollPane.setViewportView(textArea);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		tabbedPane.addTab("New tab", null, scrollPane_1, null);
+		
+		textArea_1 = new JTextArea();
+		textArea_1.setEditable(false);
+		scrollPane_1.setViewportView(textArea_1);
 		
 		JToolBar toolBar = new JToolBar();
 		toolBar.setRequestFocusEnabled(false);
@@ -107,15 +116,15 @@ public class SimlishApp implements ActionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 candidateSimlish = fc.getSelectedFile();
                 parser.setFile(candidateSimlish);
-                textPane.append("Interpreting "+candidateSimlish.getName()+"...\n");
+                textArea.append("Interpreting "+candidateSimlish.getName()+"...\n");
                 
-                String test = " sin(x) * (1 - var_12) ";
+                String test = " sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  ";
                 try {
                 	tokenizer.tokenize(test);
-                	for ( Entry<String,String> thing : tokenizer.getTokens().entrySet() )
-                		textPane.append("" + thing.getValue() + " " + thing.getKey()+"\n");
+                	for ( Token thing : tokenizer.getTokens() )
+                		textArea.append("" + thing.lexeme + " " + thing.token+"\n");
                 } catch (ParserException p) {
-                	textPane.append(p.getMessage());
+                	textArea.append(p.getMessage());
                 }
                 
                 
