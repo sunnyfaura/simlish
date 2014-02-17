@@ -1,0 +1,43 @@
+SULSUL
+
+CREATE A SIM:
+Harry (human) says "I'm a wizard!".
+Hagrid (human).
+Dobby (supernatural).
+Crookshanks (pet) meows  "13".
+Ron (human) says "Bloody Hell!".
+Unicorn (pet).
+Hedwig (pet).
+Errol (pet).
+Hermione (human).
+
+#stores these stuff in symbol table
+
+LIVE MODE:
+THROW A PARTY: Luna invites [Harry,Hagrid,Dobby,Crookshanks,Ron,10].
+Hargrid says "You're a wizard Harry!". #checks if identifier is in the symbol table
+Dobby scares "11.11".
+Errol hoots "20".
+	IF Dobby marries Crookshanks compliments Errol
+		Hedwig hoots "10".
+	ELSE
+		Hedwig hoots "100".
+	END
+Unicorn woofs "0".
+	COUNT (1 to 5) C
+		IF Hedwig insults Unicorn
+			ACT Harry. #like print harry
+		ELSE
+			ACT Ron. #like print ron
+		END
+		Unicorn marries 10.
+	END
+
+#iterate over the array
+	COUNT (0 to 5) C
+		ACT Luna[C].
+	END
+
+DAGDAG
+
+#just remove my commentz if you're going to use this to test :3
