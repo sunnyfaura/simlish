@@ -6,20 +6,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.Map.Entry;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JSplitPane;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 
 
 public class SimlishApp implements ActionListener {
@@ -31,22 +32,6 @@ public class SimlishApp implements ActionListener {
 	private File candidateSimlish;
 	private SimlishParser parser;
 	private SimlishTokenizer tokenizer;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SimlishApp thing = new SimlishApp();
-					thing.createGUI();			
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	public void createGUI() {
 		frame.addWindowFocusListener(new WindowAdapter() {
@@ -77,14 +62,14 @@ public class SimlishApp implements ActionListener {
 		panel.add(tabbedPane, "name_25154387111841");
 		
 		JScrollPane scrollPane = new JScrollPane();
-		tabbedPane.addTab("New tab", null, scrollPane, null);
+		tabbedPane.addTab("Interpreter", null, scrollPane, null);
 		
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		scrollPane.setViewportView(textArea);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		tabbedPane.addTab("New tab", null, scrollPane_1, null);
+		tabbedPane.addTab("Tokenizer", null, scrollPane_1, null);
 		
 		textArea_1 = new JTextArea();
 		textArea_1.setEditable(false);
@@ -114,21 +99,37 @@ public class SimlishApp implements ActionListener {
 		if (e.getSource() == btnLoadFile ) {
             int returnVal = fc.showOpenDialog(frame);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                candidateSimlish = fc.getSelectedFile();
-                parser.setFile(candidateSimlish);
+                candidateSimlish = fc.getSelectedFile();                
                 textArea.append("Interpreting "+candidateSimlish.getName()+"...\n");
                 
-                String test = " sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  sin(x) * (1 - var_12)  ";
+                LinkedList<Token> list;
+                
                 try {
-                	tokenizer.tokenize(test);
-                	for ( Token thing : tokenizer.getTokens() )
-                		textArea.append("" + thing.lexeme + " " + thing.token+"\n");
+                	final String EoL = System.getProperty("line.separator");
+                	List<String> lines = Files.readAllLines(candidateSimlish.toPath(),
+                	        Charset.defaultCharset());
+
+                	StringBuilder sb = new StringBuilder();
+                	for (String line : lines) {
+                	    sb.append(line).append(EoL);
+                	}
+                	final String content = sb.toString();
+                	tokenizer.tokenize(content);
+                	list = tokenizer.getTokens();
+                	
+                	textArea_1.append(" =LEXEME=\t\t\t=TOKEN=\n");
+                	for ( Token thing : list )
+                		textArea_1.append(" " + thing.lexeme + "\t\t\t" + thing.token+"\n");
+                	
+                	parser.setTokens(list);
+                	
+                	
                 } catch (ParserException p) {
-                	textArea.append(p.getMessage());
+                	textArea.append("CHEE WAGA CHOO CHOO! "+p.getMessage());
+                } catch (Exception pp) {
+                	textArea.append("PODERNO WEEBEE! "+pp.getMessage());
                 }
-                
-                
             }
         } 
-	}	
+	}		
 }

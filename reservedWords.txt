@@ -1,7 +1,43 @@
-sin|cos|exp|ln|sqrt 1
-\( 2
-\) 3
-\+|- 4
-\*|/ 5
-[0-9]+ 6
-[a-zA-Z][a-zA-Z0-9_]* 7
+Create a Sim==VAR_INIT
+:==COLON
+Human==STRING_TYPE
+Pet==INT_TYPE
+Supernatural==FLOAT_TYPE
+Gender==BOOLEAN_TYPE
+says|complains|reports|shouts|exclaims==STRING_ASGN_OPTR
+woofs|meows|tweets|squeeks|moos|croaks|quacks|blubs|hoots==INT_ASGN_OPTR
+boos|scares|spooks|haunts==FLOAT_ASGN_OPTR
+is==BOOL_ASGN_OPTR
+Male|Female==BOOL_LITERAL
+[a-zA-Z][a-zA-Z0-9_]*==IDENTIFIER
+[0-9]+==NUMBER
+Throw a Party==ARRAY_CREATOR
+invites==ARRAY_ASGN
+Sulsul!==PROGRAM_INIT
+Tagtag!==PROGRAM_TERMINATOR
+marries|adds==ADD_OP
+deducts|expires==SUB_OP
+woohoo|multiplies==MULT_OP
+divides==DIV_OP
+modulo|adopts==MOD_OP
+promotes==EXP_OP
+and==AND_OP
+or==OR_OP
+not|ga==NOT_OP
+equals==EQUALS
+insults==GTHAN
+compliments==LTHAN
+If==IF
+Else==ELSE
+Else if==ELSE_IF
+Count==ITERATOR
+to==COUNT_TO
+Live Mode==PRINT
+End==BLOCK_TERMINATOR
+\(==LPAREN
+\)==RPAREN
+\[==LBRACKET
+\]==RBRACKET
+\,==COMMA
+\.==PERIOD
+\"|\'==QUOTE

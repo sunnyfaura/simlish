@@ -18,7 +18,7 @@ public class SimlishTokenizer {
 			reservedWordsRead = new BufferedReader(new FileReader(reservedWords));
 			String word = "";
 			while( (word = reservedWordsRead.readLine()) != null ) {
-				String[] k = word.split(" ");
+				String[] k = word.split("==");
 					infoList.put(Pattern.compile("^("+k[0]+")" ), //lexeme
 							k[1]); //token
 			}
@@ -38,7 +38,6 @@ public class SimlishTokenizer {
 		while (!s.equals("")) {
 			boolean match = false;
 			for ( Entry<Pattern,String> thing: infoList.entrySet() ) {
-				System.out.println("pattern: "+thing.getKey().toString()+", token: "+thing.getValue());
 				Matcher m = thing.getKey().matcher(s);
 				if (m.find()) {
 					match = true;
@@ -47,9 +46,9 @@ public class SimlishTokenizer {
 					tokenList.add( new Token(tok,thing.getValue()) );
 					break;
 				}
-			} if (!match) 
+			} if (!match) {
 				throw new ParserException("Unexpected character in input: "+s);
-			System.out.println(tokenList.size());
+			}
 		}
 	}
 	
