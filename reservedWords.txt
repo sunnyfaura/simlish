@@ -2,6 +2,7 @@
 SULSUL==PROGRAM_INIT
 CREATE A SIM==VAR_INIT
 :==COLON
+-==NEGATE
 says|complains|reports|shouts|exclaims==STRING_ASGN
 boos|scares|spooks|haunts==FLOAT_ASGN
 is==BOOL_ASGN
@@ -41,7 +42,7 @@ END==BLOCK_TERMINATOR
 \.==PERIOD
 \"==DQUOTE
 \'==SQUOTE
-ACT==PRINT
+ACT==PRINT_OP
 !==MISC
 [a-zA-Z][a-zA-Z0-9_]*==IDENTIFIER
 [0-9]+==NUMBER
