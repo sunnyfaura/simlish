@@ -99,7 +99,9 @@ public class SimlishApp implements ActionListener {
 		if (e.getSource() == btnLoadFile ) {
             int returnVal = fc.showOpenDialog(frame);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                candidateSimlish = fc.getSelectedFile();                
+                candidateSimlish = fc.getSelectedFile();       
+                textArea.setText("");
+                textArea_1.setText("");
                 textArea.append("Interpreting "+candidateSimlish.getName()+"...\n");
                 
                 LinkedList<Token> list;
@@ -117,17 +119,22 @@ public class SimlishApp implements ActionListener {
                 	tokenizer.tokenize(content);
                 	list = tokenizer.getTokens();
                 	
-                	textArea_1.append(" =LEXEME=\t\t\t=TOKEN=\n");
-                	for ( Token thing : list )
-                		textArea_1.append(" " + thing.lexeme + "\t\t\t" + thing.token+"\n");
+                	textArea_1.append("\t=LEXEME=\t\t\t=TOKEN=\n");
+                	for ( int i = 0; i < list.size(); i++ ) {
+                		textArea_1.append("("+(i+1)+")\t" + list.get(i).lexeme + "\t\t\t" + list.get(i).token+"\n");
+                	}
                 	
                 	parser.parse(list);
+                	textArea_1.append(parser.getOutput());
                 	
                 	
                 } catch (ParserException p) {
                 	textArea.append("CHEE WAGA CHOO CHOO! "+p.getMessage());
-                } catch (Exception pp) {
-                	textArea.append("PODERNO WEEBEE! "+pp.getMessage());
+                } catch (NumberFormatException pp) {
+                	textArea.append("UROCKA LALALA KONDO! "+pp.getMessage());
+                } 
+                catch (Exception ppp) {
+                	textArea.append("PODERNO WEEBEE! "+ppp.getMessage());
                 }
             }
         } 
