@@ -105,6 +105,7 @@ public class SimlishParser {
 			if ( first.token.equals("DATA_TYPE") ) {
 				symbolTable.add( new Symbol( name, first.lexeme ) );
 				//throws a data type exception if invalid
+				System.out.println("Name:"+name+", Data Type: "+first.lexeme);
 			} else {
 				throw new ParserException(first.lexeme+" is an invalid data type.");
 			}

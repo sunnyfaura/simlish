@@ -10,7 +10,10 @@ woofs|meows|tweets|squeaks|moos|croaks|quacks|blubs|hoots==INT_ASGN
 THROW A PARTY==ARRAY_INIT
 invites==ARRAY_ASGN
 LIVE MODE==PROGRAM_MAIN
-human|pet|supernatural|gender==DATA_TYPE
+human==STRING_TYPE
+pet==INT_TYPE
+supernatural==FLOAT_TYPE
+gender==BOOL_TYPE
 male|female==BOOL_LITERAL
 DAGDAG==PROGRAM_TERMINATOR
 marries|adds==ADD_OP
@@ -37,9 +40,7 @@ END==BLOCK_TERMINATOR
 \]==RBRACKET
 \,==COMMA
 \.==PERIOD
-\"==DQUOTE
-\'==SQUOTE
 ACT==PRINT_OP
-!==MISC
+#(.+?)#==STRING_LITERAL
 [a-zA-Z][a-zA-Z0-9_]*==IDENTIFIER
 [0-9]+==NUMBER
