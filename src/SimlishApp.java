@@ -121,7 +121,7 @@ public class SimlishApp implements ActionListener {
                 	for ( Token thing : list )
                 		textArea_1.append(" " + thing.lexeme + "\t\t\t" + thing.token+"\n");
                 	
-                	parser.setTokens(list);
+                	parser.parse(list);
                 	
                 	
                 } catch (ParserException p) {

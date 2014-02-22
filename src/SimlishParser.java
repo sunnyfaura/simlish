@@ -40,6 +40,7 @@ public class SimlishParser {
 	}
 	public void init() {
 		variable_declaration();
+
 		array_declaration();
 	}
 	public void program_main() {
@@ -153,5 +154,25 @@ public class SimlishParser {
 	public void array_declaration() {
 
 	}
+	public void data_type()
+	{}
+	public void data_type_op()
+	{}
+	public void stuff()
+	{}
+
+	//ARRAY
+	
+	public void array()
+	{}
+	public void R()
+	{}
+	public void L()
+	{}
+	public void X()
+	{}
+	public void Y()
+	{}
+	
 	
 }
