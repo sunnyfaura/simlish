@@ -44,7 +44,24 @@ public class SimlishParser {
 		array_declaration();
 	}
 	public void program_main() {
-		//main
+		if(first.token.equals("PROGRAM_MAIN"))
+		{
+			nextToken();
+			G();
+			if(first.token.equals("BLOCK_TERMINATOR"))
+			{
+				System.out.println("Thank you for playing Sims!");
+			}
+			else
+			{
+				System.out.println("Error: LIVE MODE wasn't terminated properly");
+			}
+			
+		}
+		else
+		{
+			System.out.println("Error: LIVE MODE wasn't terminated started");
+		}
 	}
 	
 	public void variable_declaration()
@@ -175,10 +192,204 @@ public class SimlishParser {
 	{}
 	public void L()
 	{}
-	public void X()
-	{}
+	//public void X()
+	//{}
 	public void Y()
 	{}
+	
+	//PROGRAM MAIN
+	public void G()
+	{
+		print();
+	}
+	
+	public void print()
+	{
+		if(first.token.equals("PRINT_OP"))
+		{
+			nextToken();
+			print_stuff();
+		}
+		else
+		{
+		}
+	}
+	
+	public void expression()
+	{
+		term();
+		sum_diff_op();
+	}
+	
+	public void sum_diff_op() {
+		// TODO Auto-generated method stub
+		sum_diff();
+		term();
+		sum_diff_op();
+		
+	}
+
+	public void sum_diff() {
+		// TODO Auto-generated method stub
+		if(first.token.equals("ADD_OP"))
+		{
+			
+		}
+		else if(first.token.equals("SUB_OP"))
+		{
+			
+		}
+	}
+
+	public void term() {
+		factor();
+		mult_div_op();
+		
+	}
+
+	public void mult_div_op() {
+		// TODO Auto-generated method stub
+		mult_div();
+		factor();
+		mult_div_op();
+	}
+
+	
+
+	public void mult_div() {
+		// TODO Auto-generated method stub
+		if(first.token.equals("MULT_OP"))
+		{
+			
+		}
+		else if(first.token.equals("DIV_OP"))
+		{
+			
+		}
+		else if(first.token.equals("MOD_OP"))
+		{
+			
+		}
+		
+		
+	}
+
+	public void factor() {
+		// TODO Auto-generated method stub
+		argument();
+		exponent();
+	}
+
+	public void exponent() {
+		// TODO Auto-generated method stub
+		if(first.token.equals("EXP_OP"))
+		{
+			nextToken();
+			argument();
+			exponent();
+		}
+		else
+		{}
+		
+	}
+
+	public void argument() {
+		// TODO Auto-generated method stub
+		value();
+		expression();
+	}
+
+	public void value() {
+		// TODO Auto-generated method stub
+		if(first.token.equals("NUMBER"))
+		{
+			nextToken();
+		}
+		else
+		{}
+		
+	}
+
+	public void print_stuff()
+	{
+		X();
+	}
+	
+	public void X()
+	{
+		if(first.token.equals("IDENTIFIER"))
+		{
+			//look up lexeme at identifier
+			//System.out.println(first.lexeme);
+		}
+		else
+		{
+			nextToken();
+			literal();
+		}
+	}
+	
+	public void literal()
+	{
+		if(first.token.equals("#"))
+		{
+			nextToken();
+			
+			if(first.token.equals("STRING_LITERAL"))
+			{
+				int tempValue = first.lexeme.length()-1;
+				String printTemp = first.lexeme.substring(0, tempValue);
+				System.out.println(printTemp);
+				
+			}
+			else
+			{
+				System.out.println("Missing closing #");
+			}
+		}
+		else if(first.token.equals("["))
+		{
+			nextToken();
+			if(first.token.equals("NUMERIC_LITERAL"))
+			{
+				 String printTemp = first.lexeme;
+				 nextToken();
+				 if(first.token.equals("]"))
+				 {
+					 System.out.println(printTemp);
+				 }
+				 else
+				 {
+					 System.out.println("Missing closing ]");
+				 }
+				 
+			}
+			else if(first.token.equals("BOOL_LITERAL"))
+			{
+				String printTemp = first.lexeme;
+				 nextToken();
+				 if(first.token.equals("]"))
+				 {
+					 System.out.println(printTemp);
+				 }
+				 else
+				 {
+					 System.out.println("Missing closing ]");
+				 }
+			}
+			else
+			{
+				System.out.println("ERROR: Number or Gender expected");
+			}
+			
+			
+		}
+		else
+		{
+			expression();
+		}
+	}
+	
 	
 	
 }
