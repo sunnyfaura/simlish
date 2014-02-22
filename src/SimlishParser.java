@@ -4,64 +4,62 @@ import java.util.LinkedList;
 public class SimlishParser {
 	LinkedList<Token> simlish;
 	Token first;
+	//Token temp;
 
 	public void nextToken() {
 		simlish.pop();
 		if(simlish.isEmpty())
-			first = new simlish(simlish.EPSILON, "", -1);
+			first = new Token ("eps", "eps");
 		else
 			first = simlish.getFirst();		
-		program();
 	}
 
 	public void parse(LinkedList<Token> list) {
 		simlish = list;
 		first = simlish.getFirst();
 		//call start of grammarz
+		program();
 	}
 
 	//grammars
 	//PROGRAM
-	public void program()
-	{
-		if(first.equals("program_init"))
-		{
+	public void program() {
+		if(first.equals("program_init")) {
 			nextToken();
 			init();
-			program_main();
-			if(first.equals("program_terminator")) //unsure if it's supposed to be here
-			{
-				
+			if(first.equals("program_terminator")) {
+				//program terminates
 			}
-			else
-			{
-				System.out.println("ERROR: Program wasn't terminated properly.");
+			else {
+				throw new ParserException("Program did not terminate properly.");
 			}
-		}
-		else
-		{
-			System.out.println("ERROR: Program wasn't started properly.");
+		} else {
+			throw new ParserException("Did you initialize the program? (Trying writing SULSUL)");
 		}
 	}
-	public void init()
-	{
+	public void init() {
 		var();
-		arr();
-	}
-	public void program_main()
-	{
-		
+		Q();
 	}
 	
-	public void var()
-	{
-		variable_declaration();
-		//OR EPSILON
+	public void Q() {
+		arr();
+		QQ();
 	}
-	public void arr()
-	{	
+	
+	public void QQ() {
+		program_main();
+	}
+	public void program_main() {
+		
+		
+	}
+
+	public void var() {
+		variable_declaration();
+	}
+	public void arr() {	
 		array_declaration();
-		//OR EPSILON
 	}
 	public void variable_declaration()
 	{
@@ -115,5 +113,25 @@ public class SimlishParser {
 	{
 		
 	}
+	public void data_type()
+	{}
+	public void data_type_op()
+	{}
+	public void stuff()
+	{}
+
+	//ARRAY
+	
+	public void array()
+	{}
+	public void R()
+	{}
+	public void L()
+	{}
+	public void X()
+	{}
+	public void Y()
+	{}
+	
 	
 }
