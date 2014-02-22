@@ -12,9 +12,10 @@ public class Symbol {
 		else if ( dataType.equals("pet") )
 			intVal = Integer.parseInt( value );
 		else if ( dataType.equals("supernatural") )
+			//check if valid float
 			doubleVal = Double.parseDouble(value);
-		else if ( dataType.equals("gender") )
+		else if ( dataType.equals("gender") && ( value.equals("male") || value.equals("female")  ) )
 			boolVal =  value;
-		else throw new DataTypeException(value+" is an invalid data type.");
+		else throw new DataTypeException( dataType + " is an invalid data type." );
 	}
 }

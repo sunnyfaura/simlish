@@ -10,8 +10,7 @@ woofs|meows|tweets|squeaks|moos|croaks|quacks|blubs|hoots==INT_ASGN
 THROW A PARTY==ARRAY_INIT
 invites==ARRAY_ASGN
 LIVE MODE==PROGRAM_MAIN
-human==STRING_TYPE
-pet==INT_TYPE
+human|pet|==DATA_TYPE
 supernatural==FLOAT_TYPE
 gender==BOOLEAN_TYPE
 male|female==BOOL_LITERAL
