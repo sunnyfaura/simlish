@@ -1,6 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -20,7 +20,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextPane;
 
 
 public class SimlishApp implements ActionListener {
@@ -48,7 +47,10 @@ public class SimlishApp implements ActionListener {
 	 */
 	public SimlishApp() throws Exception {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(100, 100, 600, 600);
+		Toolkit tk = Toolkit.getDefaultToolkit();  
+		int xSize = ((int) tk.getScreenSize().getWidth() - 60);  
+		int ySize = ((int) tk.getScreenSize().getHeight() - 10); 
+		frame.setSize(xSize,ySize);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
@@ -119,9 +121,10 @@ public class SimlishApp implements ActionListener {
                 	tokenizer.tokenize(content);
                 	list = tokenizer.getTokens();
                 	
-                	textArea_1.append("\t=LEXEME=\t\t\t=TOKEN=\n");
+                	String tabs = "\t\t\t\t\t\t";
+                	textArea_1.append("\t=LEXEME="+tabs+"=TOKEN=\n");
                 	for ( int i = 0; i < list.size(); i++ ) {
-                		textArea_1.append("("+(i+1)+")\t" + list.get(i).lexeme + "\t\t\t" + list.get(i).token+"\n");
+                		textArea_1.append("("+(i+1)+")\t" + list.get(i).lexeme + tabs + list.get(i).token+"\n");
                 	}
                 	
                 	parser.parse(list);
@@ -129,12 +132,12 @@ public class SimlishApp implements ActionListener {
                 	
                 	
                 } catch (ParserException p) {
-                	textArea.append("CHEE WAGA CHOO CHOO! "+p.getMessage());
+                	textArea.append("CHEE WAGA CHOOCHOO! "+p.getMessage());
                 } catch (NumberFormatException pp) {
                 	textArea.append("UROCKA LALALA KONDO! "+pp.getMessage());
                 } 
                 catch (Exception ppp) {
-                	textArea.append("PODERNO WEEBEE! "+ppp.getMessage());
+                	textArea.append("PODERNO WEEBEE! Something's \""+ppp.getMessage()+"\"?");
                 }
             }
         } 

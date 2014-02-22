@@ -54,6 +54,7 @@ public class SimlishParser {
 		if ( first.token.equals("VAR_INIT") ) {
 			variable_declaration();
 			nextToken();
+			System.out.println("Array time! "+first.token);
 			if ( first.token.equals("ARRAY_INIT") ) {
 				array_declaration();
 			} else {
@@ -68,23 +69,18 @@ public class SimlishParser {
 	}
 	
 	public void program_main() {
-		if(first.token.equals("PROGRAM_MAIN"))
-		{
+		if(first.token.equals("PROGRAM_MAIN")) {
 			nextToken();
 			G();
-			if(first.token.equals("BLOCK_TERMINATOR"))
-			{
+			if(first.token.equals("BLOCK_TERMINATOR")) {
 				System.out.println("Thank you for playing Sims!");
 			}
-			else
-			{
-				System.out.println("Error: LIVE MODE wasn't terminated properly");
+			else {
+				System.out.println("LIVE MODE wasn't terminated.");
 			}
-			
 		}
-		else
-		{
-			System.out.println("Error: LIVE MODE wasn't terminated started");
+		else {
+			System.out.println("LIVE MODE wasn't initialized.");
 		}
 	}
 	
@@ -94,31 +90,35 @@ public class SimlishParser {
 		System.out.println(first.token);
 		if(first.token.equals("COLON")) {
 			variable();
-			if(first.token.equals("BLOCK_TERMINATOR")) {
-				System.out.println("CREATED SIMS SUCCESSFULLY!");
-			}
-			else {
-				throw new ParserException("ERROR: CREATE A SIM wasn't terminated properly.");
-			}
 		}
 	}
 
 	public void variable() {
 		T();
-		variable();
+		if ( first.token.equals("BLOCK_TERMINATOR") ) {
+			System.out.println("Successfully created Sims! Double check");
+		} else {
+			variable();
+		}		
 	}
 	
 	public void T() {
-		U();
-		if ( first.token.equals("PERIOD") ) {
-			System.out.println("A successful variable declaration!");
+		nextToken();
+		System.out.println("T identifier "+first.token);
+		if ( first.token.equals("BLOCK_TERMINATOR") ) {
+			System.out.println("Successfully created Sims!");
 		} else {
-			throw new ParserException("T: Missing PERIOD for a variable declaration.");
+			U();
+			if ( first.token.equals("PERIOD") ) {
+				System.out.println("A successful variable declaration!");
+				
+			} else {
+				throw new ParserException("Missing PERIOD for a variable declaration.");
+			}
 		}
 	}
 	
 	public void U() {
-		nextToken();
 		System.out.println("U identifier "+first.token);
 		if ( first.token.equals("IDENTIFIER") ) {
 			identifier = first.lexeme;
@@ -277,7 +277,7 @@ public class SimlishParser {
 	}
 	
 	public void array_declaration() {
-
+		
 	}
 	
 	//PROGRAM MAIN
