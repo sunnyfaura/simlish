@@ -50,6 +50,7 @@ public class SimlishParser {
 	public void variable_declaration()
 	{
 		if(first.token.equals("VAR_INIT")) {
+			System.out.println("VAR_INIT");
 			nextToken();
 			if(first.token.equals("COLON")) {
 				nextToken();
@@ -108,10 +109,10 @@ public class SimlishParser {
 			if ( first.token.equals("RPAREN") ) {
 				System.out.println("Successful U");
 			} else {
-				throw new ParserException("Missing RPAREN in a variable declaration.");
+				throw new ParserException("Missing RPAREN where a "+first.lexeme+" is declared.");
 			}
 		} else {
-			throw new ParserException("Missing LPAREN in a variable declaration.");
+			throw new ParserException("Missing LPAREN where a "+first.lexeme+" is declared.");
 		}
 	}
 
