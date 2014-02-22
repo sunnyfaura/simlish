@@ -50,10 +50,10 @@ public class SimlishParser {
 	public void variable_declaration()
 	{
 		if(first.token.equals("VAR_INIT")) {
-			System.out.println("VAR_INIT");
+			System.out.println(first.token);
 			nextToken();
+			System.out.println(first.token);
 			if(first.token.equals("COLON")) {
-				nextToken();
 				variable();
 				if(first.token.equals("BLOCK_TERMINATOR")) {
 					System.out.println("CREATED SIMS SUCCESSFULLY!");
@@ -88,6 +88,7 @@ public class SimlishParser {
 	public void U() {
 		nextToken();
 		String name = "";
+		System.out.println(first.token);
 		if ( first.token.equals("IDENTIFIER") ) {
 			if ( symbolTable.contains(name) ) {
 				throw new ParserException( first.lexeme+" already exists." );
@@ -95,24 +96,27 @@ public class SimlishParser {
 				name = first.lexeme;
 			}
 		}
+		System.out.println(name);
 		nextToken();
+		System.out.println(first.token);
 		if( first.token.equals("LPAREN") ) {
 			nextToken();
+			System.out.println(first.token);
 			if ( first.token.equals("DATA_TYPE") ) {
-				nextToken();
 				symbolTable.add( new Symbol( name, first.lexeme ) );
 				//throws a data type exception if invalid
 			} else {
 				throw new ParserException(first.lexeme+" is an invalid data type.");
 			}
 			nextToken();
+			System.out.println(first.token);
 			if ( first.token.equals("RPAREN") ) {
 				System.out.println("Successful U");
 			} else {
-				throw new ParserException("Missing RPAREN where a "+first.lexeme+" is declared.");
+				throw new ParserException("Missing RPAREN where a \""+first.lexeme+"\" is declared.");
 			}
 		} else {
-			throw new ParserException("Missing LPAREN where a "+first.lexeme+" is declared.");
+			throw new ParserException("Missing LPAREN where a \""+first.lexeme+"\" is declared.");
 		}
 	}
 
