@@ -35,6 +35,8 @@ public class SimlishTokenizer {
 		String s = str.trim();
 		tokenList.clear();
 		
+		int counter = 0;
+		
 		while (!s.equals("")) {
 			boolean match = false;
 			for ( Entry<Pattern,String> thing: infoList.entrySet() ) {
@@ -43,7 +45,7 @@ public class SimlishTokenizer {
 					match = true;
 					String tok = m.group().trim();
 					s = m.replaceFirst("").trim();
-					tokenList.add( new Token(tok,thing.getValue()) );
+					tokenList.add( new Token( tok, thing.getValue() ) );
 					break;
 				}
 			} if (!match) {

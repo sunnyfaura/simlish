@@ -2,118 +2,147 @@ import java.util.LinkedList;
 
 
 public class SimlishParser {
-	LinkedList<Token> simlish;
+	LinkedList<Token> lookupTable;
+	LinkedList<Symbol> symbolTable;
 	Token first;
 
 	public void nextToken() {
-		simlish.pop();
-		if(simlish.isEmpty())
-			first = new simlish(simlish.EPSILON, "", -1);
+		lookupTable.pop();
+		if( lookupTable.isEmpty() )
+			first = new Token( "EOF","EPSILON" );
 		else
-			first = simlish.getFirst();		
+			first = lookupTable.getFirst();	
+	}
+	
+	public void parse(LinkedList<Token> list) {
+		lookupTable = list;
+		symbolTable = new LinkedList<Symbol>();
+		first = lookupTable.getFirst();
 		program();
 	}
 
-	public void parse(LinkedList<Token> list) {
-		simlish = list;
-		first = simlish.getFirst();
-		//call start of grammarz
-	}
-
-	//grammars
-	//PROGRAM
-	public void program()
-	{
-		if(first.equals("program_init"))
-		{
+	public void program() {
+		if(first.token.equals("PROGRAM_INIT")) {
 			nextToken();
 			init();
 			program_main();
-			if(first.equals("program_terminator")) //unsure if it's supposed to be here
-			{
+			if(first.token.equals("PROGRAM_TERMINATOR")) {
 				
 			}
-			else
-			{
+			else {
 				System.out.println("ERROR: Program wasn't terminated properly.");
 			}
 		}
-		else
-		{
+		else {
 			System.out.println("ERROR: Program wasn't started properly.");
 		}
 	}
-	public void init()
-	{
-		var();
-		arr();
+	public void init() {
+		variable_declaration();
+		array_declaration();
 	}
-	public void program_main()
-	{
-		
+	public void program_main() {
+		//main
 	}
 	
-	public void var()
-	{
-		variable_declaration();
-		//OR EPSILON
-	}
-	public void arr()
-	{	
-		array_declaration();
-		//OR EPSILON
-	}
 	public void variable_declaration()
 	{
-		if(first.equals("var_init"))
-		{
+		if(first.token.equals("VAR_INIT")) {
 			nextToken();
-			if(first.equals(":"))
-			{
+			if(first.token.equals("COLON")) {
 				nextToken();
 				variable();
-				if(first.equals("block_terminator"))
-				{
-					System.out.println("ERROR: CREATE A SIM wasn't terminated properly.");
+				if(first.token.equals("BLOCK_TERMINATOR")) {
+					System.out.println("CREATED SIMS SUCCESSFULLY!");
 				}
-				else
-				{
-					
+				else {
+					throw new ParserException("ERROR: CREATE A SIM wasn't terminated properly.");
 				}
 			}
 		}
-		//create an else-if for if epsilon
-		//create an else it for array
-		else
-		{
-			System.out.println("ERROR: CREATE A SIM wasn't started properly.");
+		else {
+			throw new ParserException("Invalid declaration of variables.");
 		}
 	}
-	public void array_declaration()
-	{
 
-	}
-
-	//VARIABLE DECLARATION
-	public void variable()
-	{
+	public void variable() {
 		T();
 		variable();
 	}
-	public void T()
-	{
+	
+	public void T() {
 		U();
 		V();
-		//if for period
+		nextToken();
+		if ( first.token.equals("PERIOD") ) {
+			System.out.println("A successful variable declaration!");
+		} else {
+			throw new ParserException("Missing PERIOD for a variable declaration.");
+		}
 	}
-	public void U()
-	{
-		//if identifier
-			//call data_type();
+	
+	
+	public void U() {
+		nextToken();
+		String name = "";
+		if ( first.token.equals("IDENTIFIER") ) {
+			name = first.lexeme;
+		}
+		nextToken();
+		if( first.token.equals("LPAREN") ) {
+			nextToken();
+			if ( first.token.equals("DATA_TYPE") ) {
+				nextToken();
+				symbolTable.add( new Symbol( name, first.lexeme ) );
+				//throws a data type exception if invalid
+			} else {
+				throw new ParserException(first.lexeme+" is an invalid data type.");
+			}
+			nextToken();
+			if ( first.token.equals("RPAREN") ) {
+				System.out.println("Successful U");
+			} else {
+				throw new ParserException("Missing RPAREN in a variable declaration.");
+			}
+		} else {
+			throw new ParserException("Missing LPAREN in a variable declaration.");
+		}
 	}
-	public void V()
-	{
+
+	
+	public void V() {
+		nextToken();
+		if( first.token.equals("STRING_ASGN") ) {
+			System.out.println("Ok doing a String assignment.");
+		} else if ( first.token.equals("FLOAT_ASGN") ) {
+			System.out.println("Ok doing a Float assignment.");
+		} else if ( first.token.equals("BOOL_ASGN") ) {
+			System.out.println("Ok doing a Boolean assignment.");
+		} else if ( first.token.equals("INT_ASGN") ) {
+			System.out.println("Ok doing an Integer assignment.");
+		} else {
+			throw new ParserException(first.lexeme+" is not an assignment operator.");
+		}
 		
+		nextToken();
+		if( first.token.equals("DQUOTE") ) {
+			assignment();
+			if ( first.token.equals("DQUOTE") ) {
+				System.out.println("Correct syntax for assignment");
+			} else {
+				throw new ParserException("Missing starting DQUOTE for an assignment operation.");
+			}
+		} else {
+			throw new ParserException("Missing terminating DQUOTE for an assignment operation.");
+		}
+	}
+	
+	public void assignment() {
+		
+	}
+	
+	public void array_declaration() {
+
 	}
 	
 }

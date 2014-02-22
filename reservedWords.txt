@@ -1,4 +1,4 @@
-#[^\n]*==COMMENT
+EOF==EPSILON
 SULSUL==PROGRAM_INIT
 CREATE A SIM==VAR_INIT
 :==COLON
@@ -10,9 +10,7 @@ woofs|meows|tweets|squeaks|moos|croaks|quacks|blubs|hoots==INT_ASGN
 THROW A PARTY==ARRAY_INIT
 invites==ARRAY_ASGN
 LIVE MODE==PROGRAM_MAIN
-human|pet|==DATA_TYPE
-supernatural==FLOAT_TYPE
-gender==BOOLEAN_TYPE
+human|pet|supernatural|gender==DATA_TYPE
 male|female==BOOL_LITERAL
 DAGDAG==PROGRAM_TERMINATOR
 marries|adds==ADD_OP
