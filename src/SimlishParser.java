@@ -533,7 +533,7 @@ public class SimlishParser {
 				throw new ParserException("\""+first.lexeme+"\" was not declared!");
 			} else {
 				int iTemp = 0;
-				for(int i = 0; i<symbolTable.size();i++)
+				for(int i = 0; i < symbolTable.size();i++)
 				{
 					Symbol teaPot = symbolTable.get(i);
 					String tPot = teaPot.getIdentifier();
@@ -566,7 +566,6 @@ public class SimlishParser {
 					output += pot.getBoolVal() + "\n";
 				}
 				nextToken();
-				
 			}	
 			//variable or array assignment
 		} else if ( first.token.equals("NUMBER") ) {
@@ -582,11 +581,14 @@ public class SimlishParser {
 	}
 	
 	public void variable_assignment(Symbol s) {
-		if ( s.identifier.equals("INTEGER") ) {
-			nextToken();
+		nextToken();
+		System.out.println("var_asgn: "+first.token);
+		if ( s.dataType.equals("INTEGER") ) {
 			if( first.token.equals("INT_ASGN") ) {
-				int_expr();
 				nextToken();
+				int_expr(first.lexeme);
+				nextToken();
+				System.out.println("int asgn period: "+first.token);
 				if( first.token.equals("PERIOD") ) {
 					System.out.println("Successfull assignment for "+s.identifier+".");
 				} else {
@@ -595,9 +597,10 @@ public class SimlishParser {
 			} else {
 				throw new ParserException("Invalid assignment for "+s.identifier+".");
 			}
-		} else if ( s.identifier.equals("FLOAT") ) {
+		} else if ( s.dataType.equals("FLOAT") ) {
 			nextToken();
 			if( first.token.equals("FLOAT_ASGN") ) {
+				nextToken();
 				float_expr();
 				nextToken();
 				if( first.token.equals("PERIOD") ) {
@@ -608,7 +611,7 @@ public class SimlishParser {
 			} else {
 				throw new ParserException("Invalid assignment for "+s.identifier+".");
 			}
-		} else if ( s.identifier.equals("STRING") ) {
+		} else if ( s.dataType.equals("STRING") ) {
 			nextToken();
 			if( first.token.equals("STRING_ASGN") ) {
 				string_expr(false);
@@ -621,7 +624,7 @@ public class SimlishParser {
 			} else {
 				throw new ParserException("Invalid assignment for "+s.identifier+".");
 			}
-		} else if ( s.identifier.equals("BOOL") ) {
+		} else if ( s.dataType.equals("BOOL") ) {
 			nextToken();
 			if( first.token.equals("BOOL_ASGN") ) {
 				bool_expr();
@@ -636,118 +639,114 @@ public class SimlishParser {
 		}
 	}
 
-	public int int_expr() {
-		int_term();
+	public int int_expr(String thing) {
+		int value = int_term(thing);
+		int_sum_diff_op();
+		return value;
 	}
 	
-	public void int_term() {
-		int_factor();
+	public int int_term(String thing) {
+		int value = int_factor(thing);
+		int_mult_div_op();
+		return value;
 	}
 	
-	public void int_factor() {
-		int_argument();
+	public int int_factor(String thing) {
+		int value = int_argument(thing);
 		int_exponent();
+		return value;
+	}
+	
+	public int int_argument(String thing) {
+		int value;
+		System.out.println("int args: "+first.lexeme);
+		if( first.token.equals("NUMBER") ) {
+			//something
+			System.out.println("NUMBERS!!!!!!!");
+			value = Integer.parseInt(first.lexeme);
+			nextToken(); //dunno to call PERIOD or something
+		} else {
+			if ( first.token.equals("LPAREN") ) {
+				value = int_expr(thing);
+				nextToken();
+				if( first.token.equals("RPAREN") ) {
+					//dunno
+				} else {
+					throw new ParserException("Missing RPAREN.");
+				}
+			} else {
+				throw new ParserException("Cannot perform integer operation.");
+			}
+		}	
+		return value;
+	}
+	
+	public void int_sum_diff_op() {
+//		nextToken();
+		System.out.println("sumdiff: "+first.lexeme);
+		if( first.token.equals("ADD_OP") ) {
+			System.out.println("about to be married!");
+			nextToken();
+			System.out.println("marries: "+first.lexeme);
+			int_term(first.lexeme);
+			int_sum_diff_op();
+		} else if( first.token.equals("SUB_OP") ) {
+			System.out.println("about to expire!");
+			nextToken();
+			System.out.println("expires: "+first.token);
+			int_term(first.lexeme);
+			int_sum_diff_op();
+		} else {
+			//do nothing
+		}
+	}
+	
+	public void int_mult_div_op() {
+		// TODO Auto-generated method stub
+		//	nextToken();
+		System.out.println("multdiv: "+first.lexeme);
+		if( first.token.equals("MULT_OP") ) {
+			System.out.println("about to woohoo!");
+			nextToken();
+			System.out.println("woohoos: "+first.lexeme);
+			int_factor(first.lexeme);
+			int_mult_div_op();
+		} else if ( first.token.equals("DIV_OP") ) {
+			System.out.println("about to divide!");
+			nextToken();
+			System.out.println("divides: "+first.lexeme);
+			int_factor(first.lexeme);
+			int_mult_div_op();
+		} else if ( first.token.equals("MOD_OP") ) {
+			System.out.println("about to adopt!");
+			nextToken();
+			System.out.println("adopts: "+first.lexeme);
+			int_factor(first.lexeme);
+			int_mult_div_op();
+		} else {
+			//do nothing
+		}	
 	}
 	
 	public void int_exponent() {
-		nextToken();
+//		nextToken();
+		System.out.println("promoting: "+first.lexeme);
 		if( first.token.equals("EXP_OP") ) {
-			int_argument();
-		}
-		
-		int_exponent();
-	}
-	
-	public int int_argument() {
-		nextToken();
-		System.out.println("int args: "+first.token);
-		if( first.token.equals("NUMBER") ) {
-			return Integer.parseInt(first.lexeme);
+			System.out.println("about to promote!");
+			nextToken();
+			System.out.println("promotes: "+first.lexeme);
+			int_argument(first.lexeme);
+			int_exponent();
 		} else {
-			throw new ParserException("Cannot perform integer operation.");
+			//do nothing
 		}
 	}
 	
-	public void sum_diff_op() {
-		// TODO Auto-generated method stub
-		sum_diff();
-		term();
-		sum_diff_op();
+	public void float_expr() {
 		
 	}
-
-	public void sum_diff() {
-		// TODO Auto-generated method stub
-		if(first.token.equals("ADD_OP")) {
-			
-		}
-		else if(first.token.equals("SUB_OP")) {
-			
-		}
-	}
-
-	public void term() {
-		factor();
-		mult_div_op();
+	
+	public void bool_expr() {
 		
-	}
-
-	public void mult_div_op() {
-		// TODO Auto-generated method stub
-		mult_div();
-		factor();
-		mult_div_op();
-	}
-
-	public void mult_div() {
-		// TODO Auto-generated method stub
-		if(first.token.equals("MULT_OP")) {
-			
-		}
-		else if(first.token.equals("DIV_OP")) {
-			
-		}
-		else if(first.token.equals("MOD_OP")) {
-			
-		}
-		
-		
-	}
-
-	public void factor() {
-		// TODO Auto-generated method stub
-		argument();
-		exponent();
-	}
-
-	public void exponent() {
-		// TODO Auto-generated method stub
-		if(first.token.equals("EXP_OP")) {
-			nextToken();
-			argument();
-			exponent();
-		}
-		else {
-			
-		}
-		
-	}
-
-	public void argument() {
-		// TODO Auto-generated method stub
-		value();
-		expression();
-	}
-
-	public void value() {
-		// TODO Auto-generated method stub
-		if(first.token.equals("NUMBER")) {
-			nextToken();
-		}
-		else {
-			
-		}
 	}
 }
-
-//what
