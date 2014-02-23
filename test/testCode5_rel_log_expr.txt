@@ -1,0 +1,18 @@
+SULSUL
+
+CREATE A SIM:
+	Thing (gender).
+	Francis (gender) is male.
+	Frances (gender) is female.
+END
+
+LIVE MODE:
+	Thing is male.
+	Francis is 10 insults 1.
+	Frances is male or female.
+	ACT Francis.
+	ACT Frances.
+	ACT Thing.
+END
+
+DAGDAG

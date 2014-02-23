@@ -1,0 +1,43 @@
+SULSUL
+
+CREATE A SIM:
+	Harry (human) says #I'm a wizard!#.
+	Hagrid (human).
+	Dobby (supernatural).
+	Crookshanks (pet) meows  13.
+	Ron (human) says #Bloody Hell!#.
+	Unicorn (pet).
+	Hedwig (pet).
+	Errol (pet).
+	Hermione (human).
+END
+
+THROW A PARTY: 
+	Luna invites [Harry,Hagrid,Dobby,Crookshanks,Ron,10].
+END
+
+LIVE MODE:
+	Hagrid says #You're a wizard Harry!#.
+	Dobby scares 11.11.
+	Errol hoots 20.
+	IF Errol marries Crookshanks compliments Errol
+		Hedwig hoots 10.
+	ELSE
+		Hedwig hoots 100.
+	END
+	Unicorn woofs 0.
+	COUNT (1 to 5) C
+		IF Hedwig insults Unicorn
+			ACT Harry. 
+		ELSE
+			ACT Ron. 
+		END
+		Unicorn marries 10.
+	END
+
+	COUNT (0 to 5) C
+		ACT Luna[C].
+	END
+END
+
+DAGDAG

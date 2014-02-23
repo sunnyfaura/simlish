@@ -1,0 +1,12 @@
+SULSUL
+
+THROW A PARTY: 
+	Moody invites [10,10,10].
+	Luna.
+END
+
+LIVE MODE:
+	ACT Moody[0].
+END
+
+DAGDAG

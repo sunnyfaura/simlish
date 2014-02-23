@@ -1,0 +1,23 @@
+SULSUL
+
+CREATE A SIM:
+	Harry (human) says #I'm a wizard!#.
+	Hagrid (human).
+	Dobby (supernatural).
+	Crookshanks (pet) meows  13.
+	Ron (human) says #Bloody Hell!#.
+	Unicorn (pet).
+	Hedwig (pet).
+	Errol (pet).
+	Hermione (human).
+END
+
+LIVE MODE:
+	Errol hoots (20 marries -2) woohoo 2.
+	Unicorn woofs 0.
+	Dobby scares 11.11.
+	ACT Errol.
+	ACT Dobby.
+END
+
+DAGDAG
