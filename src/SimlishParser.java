@@ -603,8 +603,7 @@ public class SimlishParser {
 		if ( s.dataType.equals("INTEGER") ) {
 			if( first.token.equals("INT_ASGN") ) {
 				nextToken();
-				int_expr(first.lexeme);
-				nextToken();
+				System.out.println("int expr: "+int_expr(first.lexeme) );
 				System.out.println("int asgn period: "+first.token);
 				if( first.token.equals("PERIOD") ) {
 					System.out.println("Successfull assignment for "+s.identifier+".");
@@ -658,20 +657,17 @@ public class SimlishParser {
 
 	public int int_expr(String thing) {
 		int value = int_term(thing);
-		int_sum_diff_op();
-		return value;
+		return int_sum_diff_op(value);
 	}
 	
 	public int int_term(String thing) {
 		int value = int_factor(thing);
-		int_mult_div_op();
-		return value;
+		return int_mult_div_op(value);
 	}
 	
 	public int int_factor(String thing) {
 		int value = int_argument(thing);
-		int_exponent();
-		return value;
+		return int_exponent(value);
 	}
 	
 	public int int_argument(String thing) {
@@ -681,7 +677,9 @@ public class SimlishParser {
 			//something
 			System.out.println("NUMBERS!!!!!!!");
 			value = Integer.parseInt(first.lexeme);
+			System.out.println("args value: "+value);
 			nextToken(); //dunno to call PERIOD or something
+			System.out.println("PERIOD??? "+first.token);
 		} else {
 			if ( first.token.equals("LPAREN") ) {
 				value = int_expr(thing);
@@ -698,65 +696,90 @@ public class SimlishParser {
 		return value;
 	}
 	
-	public void int_sum_diff_op() {
+	public int int_sum_diff_op(int v) {
 //		nextToken();
-		System.out.println("sumdiff: "+first.lexeme);
-		if( first.token.equals("ADD_OP") ) {
-			System.out.println("about to be married!");
-			nextToken();
-			System.out.println("marries: "+first.lexeme);
-			int_term(first.lexeme);
-			int_sum_diff_op();
-		} else if( first.token.equals("SUB_OP") ) {
-			System.out.println("about to expire!");
-			nextToken();
-			System.out.println("expires: "+first.token);
-			int_term(first.lexeme);
-			int_sum_diff_op();
+		int value = v;
+		if ( first.token.equals("PERIOD") ) {
+			System.out.println("whaaaaaaaaaaaaaaat sumdiff: "+value);
+			return value;
 		} else {
-			//do nothing
+			System.out.println("sumdiff val: "+value);
+			System.out.println("sumdiff: "+first.lexeme);
+			if( first.token.equals("ADD_OP") ) {
+				System.out.println("about to be married!");
+				nextToken();
+				System.out.println("marries: "+first.lexeme);
+				value += int_term(first.lexeme); 
+				value = int_sum_diff_op(value);
+			} else if( first.token.equals("SUB_OP") ) {
+				System.out.println("about to expire!");
+				nextToken();
+				System.out.println("expires: "+first.token);
+				value -= int_term(first.lexeme);
+				value = int_sum_diff_op(value);
+			} else {
+				//do nothing
+			}
 		}
+		
+		return value;
 	}
 	
-	public void int_mult_div_op() {
+	public int int_mult_div_op(int v) {
 		// TODO Auto-generated method stub
 		//	nextToken();
-		System.out.println("multdiv: "+first.lexeme);
-		if( first.token.equals("MULT_OP") ) {
-			System.out.println("about to woohoo!");
-			nextToken();
-			System.out.println("woohoos: "+first.lexeme);
-			int_factor(first.lexeme);
-			int_mult_div_op();
-		} else if ( first.token.equals("DIV_OP") ) {
-			System.out.println("about to divide!");
-			nextToken();
-			System.out.println("divides: "+first.lexeme);
-			int_factor(first.lexeme);
-			int_mult_div_op();
-		} else if ( first.token.equals("MOD_OP") ) {
-			System.out.println("about to adopt!");
-			nextToken();
-			System.out.println("adopts: "+first.lexeme);
-			int_factor(first.lexeme);
-			int_mult_div_op();
+		int value = v;
+		if ( first.token.equals("PERIOD") ) {
+			System.out.println("whaaaaaaaaaaaaaaat multdivmod: "+value);
+			return value;
 		} else {
-			//do nothing
-		}	
+			System.out.println("multdiv: "+first.lexeme);
+			if( first.token.equals("MULT_OP") ) {
+				System.out.println("about to woohoo!");
+				nextToken();
+				System.out.println("woohoos: "+first.lexeme);
+				value *= int_factor(first.lexeme);
+				value = int_mult_div_op(value);
+			} else if ( first.token.equals("DIV_OP") ) {
+				System.out.println("about to divide!");
+				nextToken();
+				System.out.println("divides: "+first.lexeme);
+				value /= int_factor(first.lexeme);
+				value = int_mult_div_op(value);
+			} else if ( first.token.equals("MOD_OP") ) {
+				System.out.println("about to adopt!");
+				nextToken();
+				System.out.println("adopts: "+first.lexeme);
+				value %= int_factor(first.lexeme);
+				value = int_mult_div_op(value);
+			} else {
+				//do nothing
+			}
+		}
+		
+		return value;
 	}
 	
-	public void int_exponent() {
+	public int int_exponent(int v) {
 //		nextToken();
-		System.out.println("promoting: "+first.lexeme);
-		if( first.token.equals("EXP_OP") ) {
-			System.out.println("about to promote!");
-			nextToken();
-			System.out.println("promotes: "+first.lexeme);
-			int_argument(first.lexeme);
-			int_exponent();
+		int value = v;
+		if ( first.token.equals("PERIOD") ) {
+			System.out.println("whaaaaaaaaaaaaaaat exp: "+value);
+			return value;
 		} else {
-			//do nothing
-		}
+			System.out.println("promoting: "+first.lexeme);
+			if( first.token.equals("EXP_OP") ) {
+				System.out.println("about to promote!");
+				nextToken();
+				System.out.println("promotes: "+first.lexeme);
+				value = (int) Math.pow( value, int_argument(first.lexeme) ) ;
+				value = int_exponent(value);
+			} else {
+				//do nothing
+			}
+		}	
+			
+		return value;
 	}
 	
 	public void float_expr() {
@@ -767,3 +790,4 @@ public class SimlishParser {
 		
 	}
 }
+ 
