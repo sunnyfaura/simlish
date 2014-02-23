@@ -64,6 +64,7 @@ public class SimlishParser {
 		
 	public void init() {
 		nextToken();
+		System.out.println("Init: "+first.token);
 		if ( first.token.equals("VAR_INIT") ) {
 			variable_declaration();
 			nextToken();
@@ -72,28 +73,13 @@ public class SimlishParser {
 				array_declaration();
 			} else {
 				//do nothing
+				//goes to program_main
 			}
 		} else if ( first.token.equals("ARRAY_INIT") ) {
 			array_declaration();
 		} else {
 			//do nothing
-			nextToken(); //to call program_main in case no variables/array declared
-		}
-	}
-	
-	public void program_main() {
-		if(first.token.equals("PROGRAM_MAIN")) {
-			nextToken();
-			G();
-			if(first.token.equals("BLOCK_TERMINATOR")) {
-				System.out.println("Thank you for playing Sims!");
-			}
-			else {
-				System.out.println("LIVE MODE wasn't terminated.");
-			}
-		}
-		else {
-			System.out.println("LIVE MODE wasn't initialized.");
+//			nextToken(); //to call program_main in case no variables/array declared
 		}
 	}
 	
@@ -269,7 +255,8 @@ public class SimlishParser {
 		Symbol pot = symbolTable.peekLast();
 		System.out.println("Identifier: "+pot.identifier);
 		if( first.token.equals("STRING_LITERAL") ) {
-			pot.assignString(first.lexeme);
+			pot.assignString(  (first.lexeme).replaceAll("#","")  );
+			System.out.println(pot.stringVal);
 			nextToken();
 			System.out.println(first.token);
 			//call next token to know if next symbol is PERIOD
@@ -399,14 +386,84 @@ public class SimlishParser {
 	}
 	//party.add(tParty); call at the end
 
-	//PROGRAM MAIN
+	public void program_main() {
+		System.out.println("Main: "+first.token);
+		if(first.token.equals("MAIN_INIT")) {
+			nextToken();
+			System.out.println("G: "+first.token);
+			G();
+			
+			System.out.println("Terminating: "+first.token);
+			if(first.token.equals("BLOCK_TERMINATOR")) {
+				System.out.println("Live Mode successful!");
+			}
+			else {
+				throw new ParserException("LIVE MODE wasn't terminated.");
+			}
+		}
+		else {
+			throw new ParserException("LIVE MODE wasn't initialized.");
+		}
+	}
+	
 	public void G() {
-		print();
+		nextToken();
+		System.out.println("H: "+first.token);
+		if ( first.token.equals("BLOCK_TERMINATOR") ) {
+			//do nothing
+		} else {
+			H();
+			G();
+		}
+	}
+	
+	String literal = "";
+	
+	public void H() {
+		if ( first.token.equals("PRINT_OP") ) {
+			//print
+			print();
+		} else if ( first.token.equals("IDENTIFIER") ) {
+			//variable or array assignment
+		} else if ( first.token.equals("NUMBER") ) {
+			//int or float expr
+		} else if ( first.token.equals("STRING_LITERAL") ) {
+			//string expr
+			literal += first.lexeme;
+			string_term();			
+			literal = literal.replaceAll("#", "");
+			System.out.println("literal msg: "+literal);
+			literal = "";
+			
+			nextToken();
+			if( first.token.equals("PERIOD") ) {
+				System.out.println("Successfully concatenated strings!");
+			} else {
+				throw new ParserException("Missing PERIOD for a string concatenation statement.");
+			}
+		} else if ( first.token.equals("BOOL_LITERAL") ) {
+			//bool expr
+		} else if ( first.token.equals("ITERATOR")) {
+			//iteration
+		} else if ( first.token.equals("IF")) {
+			//conditional
+		} else {
+			throw new ParserException("Invalid statement in LIVE MODE.");
+		}
+	}
+	
+	public void string_term() {
+		nextToken();
+		System.out.println("String Term: "+first.token);
+		if( first.token.equals("STRING_LITERAL") ) {
+			literal += first.lexeme;
+		}
 	}
 	
 	public void print() {
 		if(first.token.equals("PRINT_OP")) {
 			nextToken();
+			System.out.println(first.token);
 			print_stuff();
 		}
 		else {

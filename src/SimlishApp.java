@@ -104,7 +104,7 @@ public class SimlishApp implements ActionListener {
                 candidateSimlish = fc.getSelectedFile();       
                 textArea.setText("");
                 textArea_1.setText("");
-                textArea.append("Interpreting "+candidateSimlish.getName()+"...\n");
+                textArea.append("== Interpreting and Tokenizing "+candidateSimlish.getName()+" ==\n");
                 
                 LinkedList<Token> list;
                 
