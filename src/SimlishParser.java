@@ -1,9 +1,11 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 
 public class SimlishParser {
 	LinkedList<Token> lookupTable;
 	LinkedList<Symbol> symbolTable;
+	ArrayList<ArrayList<Element>> party;
 	Token first;
 	Symbol top;
 	String output;
