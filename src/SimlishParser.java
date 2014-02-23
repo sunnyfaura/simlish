@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class SimlishParser {
@@ -36,10 +37,6 @@ public class SimlishParser {
 		symbolTable = new LinkedList<Symbol>();
 		first = lookupTable.getFirst();
 		program();
-	}
-	
-	public void setOutput(String output) {
-		this.output = output;
 	}
 	
 	public String getOutput() {
@@ -458,6 +455,7 @@ public class SimlishParser {
 				throw new ParserException("\""+first.lexeme+"\" does not exist!");
 			} else {
 				System.out.println( temp.identifier+" data type: "+ temp.getDataType() );
+				variable_assignment(temp);
 			}
 		} else if ( first.token.equals("NUMBER") ) {
 			//int or float expr
@@ -531,9 +529,91 @@ public class SimlishParser {
 		}
 	}
 	
-	public void expression() {
-		term();
-		sum_diff_op();
+	public void variable_assignment(Symbol s) {
+		if ( s.identifier.equals("INTEGER") ) {
+			nextToken();
+			if( first.token.equals("INT_ASGN") ) {
+				int_expr();
+				nextToken();
+				if( first.token.equals("PERIOD") ) {
+					System.out.println("Successfull assignment for "+s.identifier+".");
+				} else {
+					throw new ParserException("Missing PERIOD for "+s.identifier+".");
+				}
+			} else {
+				throw new ParserException("Invalid assignment for "+s.identifier+".");
+			}
+		} else if ( s.identifier.equals("FLOAT") ) {
+			nextToken();
+			if( first.token.equals("FLOAT_ASGN") ) {
+				float_expr();
+				nextToken();
+				if( first.token.equals("PERIOD") ) {
+					System.out.println("Successfull assignment for "+s.identifier+".");
+				} else {
+					throw new ParserException("Missing PERIOD for "+s.identifier+".");
+				}
+			} else {
+				throw new ParserException("Invalid assignment for "+s.identifier+".");
+			}
+		} else if ( s.identifier.equals("STRING") ) {
+			nextToken();
+			if( first.token.equals("STRING_ASGN") ) {
+				string_expr(false);
+				nextToken();
+				if( first.token.equals("PERIOD") ) {
+					System.out.println("Successfull assignment for "+s.identifier+".");
+				} else {
+					throw new ParserException("Missing PERIOD for "+s.identifier+".");
+				}
+			} else {
+				throw new ParserException("Invalid assignment for "+s.identifier+".");
+			}
+		} else if ( s.identifier.equals("BOOL") ) {
+			nextToken();
+			if( first.token.equals("BOOL_ASGN") ) {
+				bool_expr();
+				if( first.token.equals("PERIOD") ) {
+					System.out.println("Successfull assignment for "+s.identifier+".");
+				} else {
+					throw new ParserException("Missing PERIOD for "+s.identifier+".");
+				}
+			} else {
+				throw new ParserException("Invalid assignment for "+s.identifier+".");
+			}
+		}
+	}
+
+	public int int_expr() {
+		int_term();
+	}
+	
+	public void int_term() {
+		int_factor();
+	}
+	
+	public void int_factor() {
+		int_argument();
+		int_exponent();
+	}
+	
+	public void int_exponent() {
+		nextToken();
+		if( first.token.equals("EXP_OP") ) {
+			int_argument();
+		}
+		
+		int_exponent();
+	}
+	
+	public int int_argument() {
+		nextToken();
+		System.out.println("int args: "+first.token);
+		if( first.token.equals("NUMBER") ) {
+			return Integer.parseInt(first.lexeme);
+		} else {
+			throw new ParserException("Cannot perform integer operation.");
+		}
 	}
 	
 	public void sum_diff_op() {

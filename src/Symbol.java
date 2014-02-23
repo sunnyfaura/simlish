@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 
 public class Symbol {
-	public String dataType = "";
+	public String dataType = ""; //INTEGER, FLOAT, STRING, BOOL, ARRAY
 	public String identifier = "";
 	public int intVal = 0;
 	public float floatVal = 0;
