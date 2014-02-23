@@ -281,25 +281,20 @@ public class SimlishParser {
 	}
 	
 	//PROGRAM MAIN
-	public void G()
-	{
+	public void G() {
 		print();
 	}
 	
-	public void print()
-	{
-		if(first.token.equals("PRINT_OP"))
-		{
+	public void print() {
+		if(first.token.equals("PRINT_OP")) {
 			nextToken();
 			print_stuff();
 		}
-		else
-		{
+		else {
 		}
 	}
 	
-	public void expression()
-	{
+	public double expression() {
 		term();
 		sum_diff_op();
 	}
@@ -314,12 +309,10 @@ public class SimlishParser {
 
 	public void sum_diff() {
 		// TODO Auto-generated method stub
-		if(first.token.equals("ADD_OP"))
-		{
+		if(first.token.equals("ADD_OP")) {
 			
 		}
-		else if(first.token.equals("SUB_OP"))
-		{
+		else if(first.token.equals("SUB_OP")) {
 			
 		}
 	}
@@ -341,16 +334,13 @@ public class SimlishParser {
 
 	public void mult_div() {
 		// TODO Auto-generated method stub
-		if(first.token.equals("MULT_OP"))
-		{
+		if(first.token.equals("MULT_OP")) {
 			
 		}
-		else if(first.token.equals("DIV_OP"))
-		{
+		else if(first.token.equals("DIV_OP")) {
 			
 		}
-		else if(first.token.equals("MOD_OP"))
-		{
+		else if(first.token.equals("MOD_OP")) {
 			
 		}
 		
@@ -365,14 +355,14 @@ public class SimlishParser {
 
 	public void exponent() {
 		// TODO Auto-generated method stub
-		if(first.token.equals("EXP_OP"))
-		{
+		if(first.token.equals("EXP_OP")) {
 			nextToken();
 			argument();
 			exponent();
 		}
-		else
-		{}
+		else {
+			
+		}
 		
 	}
 
@@ -384,95 +374,26 @@ public class SimlishParser {
 
 	public void value() {
 		// TODO Auto-generated method stub
-		if(first.token.equals("NUMBER"))
-		{
+		if(first.token.equals("NUMBER")) {
 			nextToken();
 		}
-		else
-		{}
-		
+		else {
+			
+		}
 	}
 
-	public void print_stuff()
-	{
+	public void print_stuff() {
 		X();
 	}
 	
-	public void X()
-	{
-		if(first.token.equals("IDENTIFIER"))
-		{
+	public void X() {
+		if(first.token.equals("IDENTIFIER")) {
 			//look up lexeme at identifier
 			//System.out.println(first.lexeme);
 		}
-		else
-		{
+		else {
 			nextToken();
-			literal();
+			//do something
 		}
 	}
-	
-	public void literal()
-	{
-		if(first.token.equals("#"))
-		{
-			nextToken();
-			
-			if(first.token.equals("STRING_LITERAL"))
-			{
-				int tempValue = first.lexeme.length()-1;
-				String printTemp = first.lexeme.substring(0, tempValue);
-				System.out.println(printTemp);
-				
-			}
-			else
-			{
-				System.out.println("Missing closing #");
-			}
-		}
-		else if(first.token.equals("["))
-		{
-			nextToken();
-			if(first.token.equals("NUMERIC_LITERAL"))
-			{
-				 String printTemp = first.lexeme;
-				 nextToken();
-				 if(first.token.equals("]"))
-				 {
-					 System.out.println(printTemp);
-				 }
-				 else
-				 {
-					 System.out.println("Missing closing ]");
-				 }
-				 
-			}
-			else if(first.token.equals("BOOL_LITERAL"))
-			{
-				String printTemp = first.lexeme;
-				 nextToken();
-				 if(first.token.equals("]"))
-				 {
-					 System.out.println(printTemp);
-				 }
-				 else
-				 {
-					 System.out.println("Missing closing ]");
-				 }
-			}
-			else
-			{
-				System.out.println("ERROR: Number or Gender expected");
-			}
-			
-			
-		}
-		else
-		{
-			expression();
-		}
-	}
-	
-	
-	
 }

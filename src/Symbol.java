@@ -1,9 +1,9 @@
 
 public class Symbol {
-	public String identifier;
-	public int intVal;
-	public float floatVal;
-	public String stringVal, boolVal;
+	public String identifier = "";
+	public int intVal = 0;
+	public float floatVal = 0;
+	public String stringVal = "", boolVal = "female";
 	
 	public Symbol( String identifier ) {
 		this.identifier = identifier;
@@ -23,5 +23,6 @@ public class Symbol {
 	
 	public void assignBool( String value ) {
 		boolVal = value;
+		//default value is female (equivalent to false)
 	}
 }

@@ -9,7 +9,7 @@ is==BOOL_ASGN
 woofs|meows|tweets|squeaks|moos|croaks|quacks|blubs|hoots==INT_ASGN
 THROW A PARTY==ARRAY_INIT
 invites==ARRAY_ASGN
-LIVE MODE==PROGRAM_MAIN
+LIVE MODE==MAIN_INIT
 human==STRING_TYPE
 pet==INT_TYPE
 supernatural==FLOAT_TYPE
