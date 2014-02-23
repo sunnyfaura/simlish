@@ -19,6 +19,16 @@ public class SimlishParser {
 		else
 			first = lookupTable.getFirst();	
 	}
+	
+	public Symbol findSymbol( String identifier ) {
+		Symbol ret = null;
+		for( Symbol s : symbolTable ) {
+			if ( s.identifier.equals(identifier) ) {
+				ret = s;
+			}
+		}
+		return ret;
+	}
 
 	public void parse(LinkedList<Token> list) {
 		lookupTable = list;
@@ -125,12 +135,16 @@ public class SimlishParser {
 		System.out.println("U identifier "+first.token);
 		if ( first.token.equals("IDENTIFIER") ) {
 			identifier = first.lexeme;
-			nextToken();
-			System.out.println(first.token);
-			if ( first.token.equals("LPAREN") ) {
-				V();
+			if ( findSymbol(identifier) != null ) {
+				throw new ParserException("\""+identifier+"\" already exists! Choose a different variable name.");
 			} else {
-				throw new ParserException("Missing LPAREN for \""+identifier+"\"");
+				nextToken();
+				System.out.println(first.token);
+				if ( first.token.equals("LPAREN") ) {
+					V();
+				} else {
+					throw new ParserException("Missing LPAREN for \""+identifier+"\"");
+				}
 			}
 		}
 	}
@@ -353,12 +367,17 @@ public class SimlishParser {
 
 	public void array_element() {
 		// TODO Auto-generated method stub
-		if(first.token.equals("IDENTIFIER")&&symbolTable.contains(first.lexeme))
-		{
-			nextToken();
-			tparty.add(first.lexeme);
-			
-			
+		if( first.token.equals("IDENTIFIER") ) {
+			Symbol symbol = findSymbol(first.lexeme);
+			if ( symbol == null ) {
+				throw new ParserException("\""+first.lexeme+"\" was not declared!");
+			} else {
+				nextToken();
+				Element temp = new Element();
+				temp.setSymbol(symbol);
+				temp.setDataType("SYMBOL");
+				tparty.add(temp);
+			}			
 		}
 		else if(first.token.equals("STRING_LITERAL"))
 		{
