@@ -544,7 +544,6 @@ public class SimlishParser {
 			} else {
 				
 				int iTemp = symbolTable.indexOf(first.lexeme);
-				String temp =symbolTable.get(iTemp);
 				nextToken();
 				
 			}	
