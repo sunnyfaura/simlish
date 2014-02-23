@@ -9,6 +9,34 @@ public class Symbol {
 	public String stringVal = "", boolVal = "female";
 	public ArrayList<Element> arrayVal = new ArrayList<Element>();
 	
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public int getIntVal() {
+		return intVal;
+	}
+
+	public float getFloatVal() {
+		return floatVal;
+	}
+
+	public String getStringVal() {
+		return stringVal;
+	}
+
+	public String getBoolVal() {
+		return boolVal;
+	}
+
+	public ArrayList<Element> getArrayVal() {
+		return arrayVal;
+	}
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
+	}
+
 	public Symbol( String identifier, String dataType ) {
 		this.identifier = identifier;
 		this.dataType = dataType;
