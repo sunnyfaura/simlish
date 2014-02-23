@@ -570,7 +570,7 @@ public class SimlishParser {
 				Symbol pot = symbolTable.get(iTemp);
 				String tempDT = pot.getDataType();
 				
-				if(tempDT.equals("INT"))
+				if(tempDT.equals("INTEGER"))
 				{
 					output += pot.getIntVal() + " \n";
 					
@@ -660,7 +660,7 @@ public class SimlishParser {
 						s.realBool = logical_expr(true);
 						s.boolVal = maleFemaleHelper(s.realBool);
 						System.out.println("from male to: "+s.boolVal+"::"+s.realBool);
-					}
+					}	
 				}
 				if( first.token.equals("PERIOD") ) {
 					System.out.println("Successfull assignment for "+s.identifier+".");
