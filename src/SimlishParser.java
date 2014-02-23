@@ -9,7 +9,7 @@ public class SimlishParser {
 	ArrayList<ArrayList<Element>> party;
 	Token first;
 	Symbol top;
-	String output;
+	String output = "";
 	String identifier;
 
 	public void nextToken() {
@@ -457,12 +457,7 @@ public class SimlishParser {
 		} else if ( first.token.equals("NUMBER") ) {
 			//int or float expr
 		} else if ( first.token.equals("STRING_LITERAL") ) {
-			//string expr
-			literal += first.lexeme;
-			string_term();			
-			literal = literal.replaceAll("#", "");
-			System.out.println("literal msg: "+literal);
-			literal = "";
+			string_expr(false);
 			
 			nextToken();
 			if( first.token.equals("PERIOD") ) {
@@ -483,19 +478,51 @@ public class SimlishParser {
 	
 	public void string_term() {
 		nextToken();
-		System.out.println("String Term: "+first.token);
+		System.out.println("literal to concatenate: "+first.lexeme);
 		if( first.token.equals("STRING_LITERAL") ) {
 			literal += first.lexeme;
+		} else {
+			//do nothing
 		}
+	}
+	
+	public void string_expr(boolean print) {
+		System.out.println("literal to concatenate: "+first.lexeme);
+		literal += first.lexeme;
+		string_term();			
+		literal = literal.replaceAll("#", "");
+		System.out.println("literal msg: "+literal);
+		if (print) output += literal+"\n";
+		System.out.println("INTERPRETER: "+output);
+		literal = "";
 	}
 	
 	public void print() {
 		if(first.token.equals("PRINT_OP")) {
-			nextToken();
-			System.out.println(first.token);
 			print_stuff();
 		}
-		else {
+	}
+	
+	public void print_stuff() {
+		X();
+		if( first.token.equals("PERIOD") ) {
+			System.out.println("Successfully printed strings!");
+		} else {
+			throw new ParserException("Missing PERIOD for a string concatenation statement.");
+		}
+	}
+	
+	public void X() {
+		nextToken();
+		System.out.println("X: "+first.token);
+		if ( first.token.equals("IDENTIFIER") ) {
+			//variable or array assignment
+		} else if ( first.token.equals("NUMBER") ) {
+			//int or float expr
+		} else if ( first.token.equals("STRING_LITERAL") ) {
+			string_expr(true);
+		} else if ( first.token.equals("BOOL_LITERAL") ) {
+			//bool expr
 		}
 	}
 	
@@ -584,21 +611,6 @@ public class SimlishParser {
 		}
 		else {
 			
-		}
-	}
-
-	public void print_stuff() {
-		X();
-	}
-	
-	public void X() {
-		if(first.token.equals("IDENTIFIER")) {
-			//look up lexeme at identifier
-			//System.out.println(first.lexeme);
-		}
-		else {
-			nextToken();
-			//do something
 		}
 	}
 }

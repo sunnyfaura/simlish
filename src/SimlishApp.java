@@ -104,9 +104,9 @@ public class SimlishApp implements ActionListener {
                 candidateSimlish = fc.getSelectedFile();       
                 textArea.setText("");
                 textArea_1.setText("");
-                textArea.append("== Interpreting and Tokenizing "+candidateSimlish.getName()+" ==\n");
                 
                 LinkedList<Token> list;
+                String output = "";
                 
                 try {
                 	final String EoL = System.getProperty("line.separator");
@@ -128,8 +128,11 @@ public class SimlishApp implements ActionListener {
                 	}
                 	
                 	parser.parse(list);
-                	textArea_1.append(parser.getOutput());
                 	
+                	textArea.append("== Interpreting and Tokenizing "+candidateSimlish.getName()+" ==\n");
+                	output += parser.getOutput();
+                	textArea.append(output);
+                	//BAKIT AYAW MO MAG-APPEND BOBO
                 	
                 } catch (ParserException p) {
                 	textArea.append("CHEE WAGA CHOOCHOO! "+p.getMessage());
