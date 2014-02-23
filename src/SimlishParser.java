@@ -614,11 +614,9 @@ public class SimlishParser {
 				throw new ParserException("Invalid assignment for "+s.identifier+".");
 			}
 		} else if ( s.dataType.equals("FLOAT") ) {
-			nextToken();
 			if( first.token.equals("FLOAT_ASGN") ) {
 				nextToken();
-				float_expr();
-				nextToken();
+				System.out.println("float expr: "+float_expr(first.lexeme) );
 				if( first.token.equals("PERIOD") ) {
 					System.out.println("Successfull assignment for "+s.identifier+".");
 				} else {
@@ -628,7 +626,6 @@ public class SimlishParser {
 				throw new ParserException("Invalid assignment for "+s.identifier+".");
 			}
 		} else if ( s.dataType.equals("STRING") ) {
-			nextToken();
 			if( first.token.equals("STRING_ASGN") ) {
 				string_expr(false);
 				nextToken();
@@ -641,7 +638,6 @@ public class SimlishParser {
 				throw new ParserException("Invalid assignment for "+s.identifier+".");
 			}
 		} else if ( s.dataType.equals("BOOL") ) {
-			nextToken();
 			if( first.token.equals("BOOL_ASGN") ) {
 				bool_expr();
 				if( first.token.equals("PERIOD") ) {
@@ -682,10 +678,10 @@ public class SimlishParser {
 			System.out.println("PERIOD??? "+first.token);
 		} else {
 			if ( first.token.equals("LPAREN") ) {
-				value = int_expr(thing);
 				nextToken();
+				value = int_expr(first.lexeme);
 				if( first.token.equals("RPAREN") ) {
-					//dunno
+					nextToken(); //for PERIOD or something
 				} else {
 					throw new ParserException("Missing RPAREN.");
 				}
@@ -782,8 +778,131 @@ public class SimlishParser {
 		return value;
 	}
 	
-	public void float_expr() {
+	public float float_expr(String thing) {
+		float value = float_term(thing);
+		return float_sum_diff_op(value);
+	}
+	
+	public float float_term(String thing) {
+		float value = float_factor(thing);
+		return float_mult_div_op(value);
+	}
+	
+	public float float_factor(String thing) {
+		float value = float_argument(thing);
+		return float_exponent(value);
+	}
+	
+	public float float_argument(String thing) {
+		float value;
+		System.out.println("float args: "+first.lexeme);
+		if( first.token.equals("NUMBER") ) {
+			//something
+			System.out.println("NUMBERS!!!!!!!");
+			value = Float.parseFloat(first.lexeme);
+			System.out.println("args value: "+value);
+			nextToken(); //dunno to call PERIOD or something
+			System.out.println("PERIOD??? "+first.token);
+		} else {
+			if ( first.token.equals("LPAREN") ) {
+				nextToken();
+				value = float_expr(first.lexeme);
+				if( first.token.equals("RPAREN") ) {
+					nextToken(); //for PERIOD or something
+				} else {
+					throw new ParserException("Missing RPAREN.");
+				}
+			} else {
+				throw new ParserException("Cannot perform float operation.");
+			}
+		}	
+		return value;
+	}
+	
+	public float float_sum_diff_op(float v) {
+//		nextToken();
+		float value = v;
+		if ( first.token.equals("PERIOD") ) {
+			System.out.println("whaaaaaaaaaaaaaaat sumdiff: "+value);
+			return value;
+		} else {
+			System.out.println("sumdiff val: "+value);
+			System.out.println("sumdiff: "+first.lexeme);
+			if( first.token.equals("ADD_OP") ) {
+				System.out.println("about to be married!");
+				nextToken();
+				System.out.println("marries: "+first.lexeme);
+				value += float_term(first.lexeme); 
+				value = float_sum_diff_op(value);
+			} else if( first.token.equals("SUB_OP") ) {
+				System.out.println("about to expire!");
+				nextToken();
+				System.out.println("expires: "+first.token);
+				value -= float_term(first.lexeme);
+				value = float_sum_diff_op(value);
+			} else {
+				//do nothing
+			}
+		}
 		
+		return value;
+	}
+	
+	public float float_mult_div_op(float v) {
+		// TODO Auto-generated method stub
+		//	nextToken();
+		float value = v;
+		if ( first.token.equals("PERIOD") ) {
+			System.out.println("whaaaaaaaaaaaaaaat multdivmod: "+value);
+			return value;
+		} else {
+			System.out.println("multdiv: "+first.lexeme);
+			if( first.token.equals("MULT_OP") ) {
+				System.out.println("about to woohoo!");
+				nextToken();
+				System.out.println("woohoos: "+first.lexeme);
+				value *= float_factor(first.lexeme);
+				value = float_mult_div_op(value);
+			} else if ( first.token.equals("DIV_OP") ) {
+				System.out.println("about to divide!");
+				nextToken();
+				System.out.println("divides: "+first.lexeme);
+				value /= float_factor(first.lexeme);
+				value = float_mult_div_op(value);
+			} else if ( first.token.equals("MOD_OP") ) {
+				System.out.println("about to adopt!");
+				nextToken();
+				System.out.println("adopts: "+first.lexeme);
+				value %= float_factor(first.lexeme);
+				value = float_mult_div_op(value);
+			} else {
+				//do nothing
+			}
+		}
+		
+		return value;
+	}
+	
+	public float float_exponent(float v) {
+//		nextToken();
+		float value = v;
+		if ( first.token.equals("PERIOD") ) {
+			System.out.println("whaaaaaaaaaaaaaaat exp: "+value);
+			return value;
+		} else {
+			System.out.println("promoting: "+first.lexeme);
+			if( first.token.equals("EXP_OP") ) {
+				System.out.println("about to promote!");
+				nextToken();
+				System.out.println("promotes: "+first.lexeme);
+				value = (float) Math.pow( value, float_argument(first.lexeme) ) ;
+				value = float_exponent(value);
+			} else {
+				//do nothing
+			}
+		}	
+			
+		return value;
 	}
 	
 	public void bool_expr() {
