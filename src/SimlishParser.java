@@ -6,7 +6,7 @@ public class SimlishParser {
 	LinkedList<Token> lookupTable;
 	LinkedList<Symbol> symbolTable;
 	ArrayList<Element> tparty = new ArrayList<Element>();
-	ArrayList<ArrayList<Element>> party;
+	ArrayList<ArrayList<Element>> party = new ArrayList<ArrayList<Element>>();
 	Token first;
 	Symbol top;
 	String output = "";
@@ -227,7 +227,7 @@ public class SimlishParser {
 		System.out.println("Identifier: "+pot.identifier);
 		if( first.token.equals("NUMBER") ) {
 			pot.assignInt(first.lexeme);
-			pot.setDataType("PET");
+			pot.setDataType("INT");
 			nextToken();
 			//pot = symbolTable.peekLast();
 			
@@ -246,7 +246,7 @@ public class SimlishParser {
 		System.out.println("Identifier: "+pot.identifier);
 		if( first.token.equals("NUMBER") ) {
 			pot.assignFloat(first.lexeme);
-			pot.setDataType("SUPERNATURAL");
+			pot.setDataType("FLOAT");
 			nextToken();
 			System.out.println(first.token);
 			//call next token to know if next symbol is PERIOD
@@ -263,7 +263,7 @@ public class SimlishParser {
 		if( first.token.equals("STRING_LITERAL") ) {
 
 			pot.assignString(  (first.lexeme).replaceAll("#","")  );
-			pot.setDataType("HUMAN");
+			pot.setDataType("STRING");
 
 			System.out.println(pot.stringVal);
 			nextToken();
@@ -281,7 +281,7 @@ public class SimlishParser {
 		System.out.println("Identifier: "+pot.identifier);
 		if( first.token.equals("BOOL_LITERAL") ) {
 			pot.assignBool(first.lexeme);
-			pot.setDataType("GENDER");
+			pot.setDataType("BOOL");
 			nextToken();
 			System.out.println(first.token);
 			//call next token to know if next symbol is PERIOD
@@ -291,11 +291,15 @@ public class SimlishParser {
 	}
 	
 	public void array_declaration() {
+		
+		//
 		if(first.token.equals("ARRAY_INIT"))
 		{
 			nextToken();
+			
 			if(first.token.equals("COLON"))
 			{
+				//System.out.println("I'M HERE");
 				nextToken();
 				array();
 			}
@@ -308,8 +312,10 @@ public class SimlishParser {
 		{}
 	}
 	
-	private void array() {
+	public void array() {
 		// TODO Auto-generated method stub
+		//
+		//
 		if(first.token.equals("IDENTIFIER"))
 		{
 			Symbol symbol = findSymbol(first.lexeme);
@@ -330,6 +336,10 @@ public class SimlishParser {
 				tparty=new ArrayList<Element>();
 				array();
 			}
+			else
+			{
+				throw new ParserException("Missing PERIOD");
+			}
 		}
 		else if(first.token.equals("BLOCK_TERMINATOR"))
 		{
@@ -342,11 +352,13 @@ public class SimlishParser {
 		}
 	}
 
-	private void R() {
+	public void R() {
 		// TODO Auto-generated method stub
-		if(first.token.equals("ARRARY_ASGN"))
+		if(first.token.equals("ARRAY_ASGN"))
 		{
 			nextToken();
+
+			//
 			if(first.token.equals("LBRACKET"))
 			{
 				nextToken();
@@ -354,13 +366,13 @@ public class SimlishParser {
 				array_op();
 				if(first.token.equals("RBRACKET"))
 				{
-					
+					nextToken();
 				}
 			}
 		}
 	}
 
-	private void array_op() {
+	public void array_op() {
 		// TODO Auto-generated method stub
 		if(first.token.equals("COMMA"))
 		{
@@ -370,7 +382,7 @@ public class SimlishParser {
 		}
 		else
 		{
-			
+			//nextToken();
 		}
 	}
 
@@ -381,45 +393,50 @@ public class SimlishParser {
 			if ( symbol == null ) {
 				throw new ParserException("\""+first.lexeme+"\" was not declared!");
 			} else {
-				nextToken();
+				
 				Element temp = new Element();
 				temp.setSymbol(symbol);
-				temp.setDataType("SYMBOL");
+				temp.setDataType("ARRAY");
 				tparty.add(temp);
+				nextToken();
 			}			
 		}
 		else if(first.token.equals("STRING_LITERAL"))
 		{
-			nextToken();
+			
 			Element temp = new Element();
 			temp.setHuman(first.lexeme);
-			temp.setDataType("HUMAN");
+			temp.setDataType("STRING");
 			tparty.add(temp);
-		}
-		else if(first.token.equals("INT_LITERAL"))
-		{
 			nextToken();
+		}
+		else if(first.token.equals("NUMBER"))
+		{
+			
 			Element temp = new Element();
 			temp.setPet(Integer.parseInt(first.lexeme));
-			temp.setDataType("PET");
+			temp.setDataType("INT");
 			tparty.add(temp);
+			nextToken();
 		}
 		else if(first.token.equals("FLOAT_LITERAL"))
 		{
 			
-			nextToken();
+			
 			Element temp = new Element();
 			temp.setSupernatural(Float.parseFloat(first.lexeme));
-			temp.setDataType("SUPERNATURAL");
+			temp.setDataType("FLOAT");
 			tparty.add(temp);
+			nextToken();
 		}
 		else if(first.token.equals("BOOL_LITERAL"))
 		{
-			nextToken();
+		
 			Element temp = new Element();
 			temp.setGender(first.lexeme);
-			temp.setDataType("GENDER");
+			temp.setDataType("BOOL");
 			tparty.add(temp);
+			nextToken();
 		}
 		
 	}
@@ -550,20 +567,20 @@ public class SimlishParser {
 				Symbol pot = symbolTable.get(iTemp);
 				String tempDT = pot.getDataType();
 				
-				if(tempDT.equals("PET"))
+				if(tempDT.equals("INT"))
 				{
 					output += pot.getIntVal() + " \n";
 					
 				}
-				else if(tempDT.equals("SUPERNATURAL"))
+				else if(tempDT.equals("FLOAT"))
 				{
 					output += pot.getFloatVal() + "\n";
 				}
-				else if(tempDT.equals("HUMAN"))
+				else if(tempDT.equals("STRING"))
 				{
 					output += pot.getStringVal() + "\n";
 				}
-				else if(tempDT.equals("GENDER"))
+				else if(tempDT.equals("BOOL"))
 				{
 					output += pot.getBoolVal() + "\n";
 				}
