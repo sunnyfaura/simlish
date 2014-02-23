@@ -534,14 +534,96 @@ public class SimlishParser {
 		X();
 	}
 	
-	public void X() {
-		if(first.token.equals("IDENTIFIER")) {
-			//look up lexeme at identifier
-			//System.out.println(first.lexeme);
+	public void X()
+	{
+		if(first.token.equals("IDENTIFIER"))
+		{
+			Symbol symbol = findSymbol(first.lexeme);
+			if ( symbol == null ) {
+				throw new ParserException("\""+first.lexeme+"\" was not declared!");
+			} else {
+				
+				int iTemp = symbolTable.indexOf(first.lexeme);
+				String temp =symbolTable.get(iTemp);
+				nextToken();
+				
+			}	
 		}
-		else {
+		else
+		{
 			nextToken();
-			//do something
+			literal();
 		}
 	}
+	
+	public void literal()
+	{
+		if(first.token.equals("#"))
+		{
+			nextToken();
+			
+			if(first.token.equals("STRING_LITERAL"))
+			{
+				nextToken();
+				int tempValue = first.lexeme.length()-1;
+				String printTemp = first.lexeme.substring(0, tempValue);
+				System.out.println(printTemp);
+				
+			}
+			else
+			{
+				nextToken();
+				System.out.println("Missing closing #");
+			}
+		}
+		else if(first.token.equals("["))
+		{
+			nextToken();
+			if(first.token.equals("NUMERIC_LITERAL"))
+			{
+				nextToken();
+				 String printTemp = first.lexeme;
+				 nextToken();
+				 if(first.token.equals("]"))
+				 {
+					 nextToken();
+					 System.out.println(printTemp);
+				 }
+				 else
+				 {
+					 nextToken();
+					 System.out.println("Missing closing ]");
+				 }
+				 
+			}
+			else if(first.token.equals("BOOL_LITERAL"))
+			{
+				String printTemp = first.lexeme;
+				 nextToken();
+				 if(first.token.equals("]"))
+				 {
+					 nextToken();
+					 System.out.println(printTemp);
+				 }
+				 else
+				 {
+					 nextToken();
+					 System.out.println("Missing closing ]");
+				 }
+			}
+			else
+			{
+				nextToken();
+				System.out.println("ERROR: Number or Gender expected");
+			}
+			
+			
+		}
+		else
+		{
+			nextToken();
+			expression();
+		}
+	}
+
 }
