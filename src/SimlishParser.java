@@ -5,6 +5,7 @@ import java.util.LinkedList;
 public class SimlishParser {
 	LinkedList<Token> lookupTable;
 	LinkedList<Symbol> symbolTable;
+	ArrayList<Element> tparty = new ArrayList<Element>();
 	ArrayList<ArrayList<Element>> party;
 	Token first;
 	Symbol top;
@@ -279,9 +280,106 @@ public class SimlishParser {
 	}
 	
 	public void array_declaration() {
-		
+		if(first.token.equals("ARRAY_INIT"))
+		{
+			nextToken();
+			if(first.token.equals("COLON"))
+			{
+				nextToken();
+				array();
+			}
+			else
+			{
+				throw new ParserException("Missing COLON");
+			}
+		}
+		else
+		{}
 	}
 	
+	private void array() {
+		// TODO Auto-generated method stub
+		if(first.token.equals("IDENTIFIER"))
+		{
+			nextToken();
+			R();
+			if(first.token.equals("PERIOD"))
+			{
+				nextToken();
+				array();
+			}
+		}
+		else if(first.token.equals("BLOCK_TERMINATOR"))
+		{
+			
+		}
+		else
+		{
+			
+		}
+	}
+
+	private void R() {
+		// TODO Auto-generated method stub
+		if(first.token.equals("ARRARY_ASGN"))
+		{
+			nextToken();
+			if(first.token.equals("LBRACKET"))
+			{
+				nextToken();
+				array_element();
+				array_op();
+				if(first.token.equals("RBRACKET"))
+				{
+					
+				}
+			}
+		}
+	}
+
+	private void array_op() {
+		// TODO Auto-generated method stub
+		if(first.token.equals("COMMA"))
+		{
+			nextToken();
+			array_element();
+			array_op();
+		}
+		else
+		{
+			
+		}
+	}
+
+	public void array_element() {
+		// TODO Auto-generated method stub
+		if(first.token.equals("IDENTIFIER")&&symbolTable.contains(first.lexeme))
+		{
+			nextToken();
+			tparty.add(first.lexeme);
+			
+			
+		}
+		else if(first.token.equals("STRING_LITERAL"))
+		{
+			nextToken();
+		}
+		else if(first.token.equals("INT_LITERAL"))
+		{
+			nextToken();
+		}
+		else if(first.token.equals("FLOAT_LITERAL"))
+		{
+			nextToken();
+		}
+		else if(first.token.equals("BOOL_LITERAL"))
+		{
+			nextToken();
+		}
+		
+	}
+	//party.add(tParty); call at the end
+
 	//PROGRAM MAIN
 	public void G() {
 		print();
