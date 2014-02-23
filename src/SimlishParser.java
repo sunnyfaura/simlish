@@ -10,6 +10,7 @@ public class SimlishParser {
 	Token first;
 	Symbol top;
 	String output = "";
+	String literal = "";
 	String identifier;
 
 	public void nextToken() {
@@ -157,7 +158,7 @@ public class SimlishParser {
 		if ( first.token.equals("RPAREN") ) {
 			nextToken();
 			System.out.println("asgn int: "+first.token);
-			symbolTable.add(new Symbol(identifier));
+			symbolTable.add(new Symbol(identifier,"INTEGER"));
 			if ( first.token.equals("INT_ASGN") ) {
 				int_assignment();
 			} else {
@@ -174,7 +175,7 @@ public class SimlishParser {
 		if ( first.token.equals("RPAREN") ) {
 			nextToken();
 			System.out.println("asgn float: "+first.token);
-			symbolTable.add(new Symbol(identifier));
+			symbolTable.add(new Symbol(identifier,"FLOAT"));
 			if ( first.token.equals("FLOAT_ASGN") ) {
 				float_assignment();
 			} else {
@@ -191,7 +192,7 @@ public class SimlishParser {
 		if ( first.token.equals("RPAREN") ) {
 			nextToken();
 			System.out.println("asgn string: "+first.token);
-			symbolTable.add(new Symbol(identifier));
+			symbolTable.add(new Symbol(identifier,"STRING"));
 			if ( first.token.equals("STRING_ASGN") ) {
 				string_assignment();
 			} else {
@@ -208,7 +209,7 @@ public class SimlishParser {
 		if ( first.token.equals("RPAREN") ) {
 			nextToken();
 			System.out.println("asgn bool"+first.token);
-			symbolTable.add(new Symbol(identifier));
+			symbolTable.add(new Symbol(identifier,"BOOL"));
 			if ( first.token.equals("BOOL_ASGN") ) {
 				bool_assignment();
 			} else {
@@ -255,7 +256,7 @@ public class SimlishParser {
 		Symbol pot = symbolTable.peekLast();
 		System.out.println("Identifier: "+pot.identifier);
 		if( first.token.equals("STRING_LITERAL") ) {
-			pot.assignString(  (first.lexeme).replaceAll("#","")  );
+			pot.assignString(  (first.lexeme).replaceAll("#","") );
 			System.out.println(pot.stringVal);
 			nextToken();
 			System.out.println(first.token);
@@ -304,7 +305,7 @@ public class SimlishParser {
 		{
 			Symbol symbol = findSymbol(first.lexeme);
 			if ( symbol == null ) {
-				Symbol temp =  new Symbol(first.lexeme);
+				Symbol temp =  new Symbol(first.lexeme,"ARRAY");
 				symbolTable.add(temp);
 			}
 			else
@@ -446,14 +447,18 @@ public class SimlishParser {
 		}
 	}
 	
-	String literal = "";
-	
 	public void H() {
 		if ( first.token.equals("PRINT_OP") ) {
 			//print
 			print();
 		} else if ( first.token.equals("IDENTIFIER") ) {
 			//variable or array assignment
+			Symbol temp = findSymbol(first.lexeme);
+			if ( temp == null ) {
+				throw new ParserException("\""+first.lexeme+"\" does not exist!");
+			} else {
+				System.out.println( temp.identifier+" data type: "+ temp.getDataType() );
+			}
 		} else if ( first.token.equals("NUMBER") ) {
 			//int or float expr
 		} else if ( first.token.equals("STRING_LITERAL") ) {
@@ -561,8 +566,6 @@ public class SimlishParser {
 		factor();
 		mult_div_op();
 	}
-
-	
 
 	public void mult_div() {
 		// TODO Auto-generated method stub

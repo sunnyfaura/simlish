@@ -2,14 +2,16 @@ import java.util.ArrayList;
 
 
 public class Symbol {
+	public String dataType = "";
 	public String identifier = "";
 	public int intVal = 0;
 	public float floatVal = 0;
 	public String stringVal = "", boolVal = "female";
 	public ArrayList<Element> arrayVal = new ArrayList<Element>();
 	
-	public Symbol( String identifier ) {
+	public Symbol( String identifier, String dataType ) {
 		this.identifier = identifier;
+		this.dataType = dataType;
 	}
 	
 	public void assignInt( String value ) {
@@ -20,12 +22,16 @@ public class Symbol {
 		floatVal = Float.parseFloat(value);
 	}
 	
-	public void assignString(String value) {
+	public void assignString( String value ) {
 		stringVal = value;
 	}
 	
 	public void assignBool( String value ) {
 		boolVal = value;
 		//default value is female (equivalent to false)
+	}
+	
+	public String getDataType() {
+		return dataType;
 	}
 }
