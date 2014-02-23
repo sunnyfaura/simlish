@@ -21,7 +21,7 @@ public class Symbol {
 	}
 	
 	public void assignString(String value) {
-		stringVal = value.substring(1,value.length()-1);
+		stringVal = value;
 	}
 	
 	public void assignBool( String value ) {
