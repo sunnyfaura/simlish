@@ -7,6 +7,11 @@ CREATE A SIM:
 
 END
 
+THROW A PARTY:
+	Luna invites 
+		[10, 11, 12, 13].
+END
+
 LIVE MODE:
 	#You're a wizard Harry!# # Also you're very sweet!#.
 	
