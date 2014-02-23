@@ -499,6 +499,7 @@ public class SimlishParser {
 		} else if ( first.token.equals("BOOL_LITERAL") ) {
 			//bool expr
 		} else if ( first.token.equals("ITERATOR")) {
+			iteration();
 			//iteration
 		} else if ( first.token.equals("IF")) {
 			//conditional
@@ -685,6 +686,80 @@ public class SimlishParser {
 			
 		}
 	}
+	//ITERATION
+	public void iteration()
+	{
+		if(first.token.equals("ITERATOR"))
+		{
+			nextToken();
+			if(first.token.equals("LPAREN"))
+			{
+				nextToken();
+				start();
+				if(first.token.equals("COUNT_TO"))
+				{
+					nextToken();
+					end();
+					C();
+					H();
+					if(first.token.equals("BLOCK_TERMINATOR"))
+					{
+						nextToken();
+					}
+				}
+			}
+		}
+	}
+
+	public void end() {
+		// TODO Auto-generated method stub
+		if(first.token.equals("INT_LITERAL"))
+		{
+			nextToken();
+		}
+		else
+		{
+			throw new ParserException("Expected ending count.");
+		}
+	}
+
+	public void start() {
+		// TODO Auto-generated method stub
+		if(first.token.equals("INT_LITERAL"))
+		{
+			nextToken();
+		}
+		else
+		{
+			throw new ParserException("Expected starting count.");
+		}
+	}
+	public void C()
+	{
+		if(first.token.equals("IDENTIFIER"))
+		{
+			Symbol symbol = findSymbol(first.lexeme);
+			if ( symbol == null ) {
+				throw new ParserException("\""+first.lexeme+"\" was not declared!");
+			} else {
+				if(symbol.getDataType().equals("INT"))
+				{
+					if(symbol.getIntVal()==0)
+					{
+						
+					}
+					else
+					{
+						throw new ParserException("\""+first.lexeme+"\" should be 0");
+					}
+				}
+				else
+				{
+					throw new ParserException("\""+first.lexeme+"\" is not a PET!");
+				}
+			}
+		}
+	}
 }
 
-//what
+	
