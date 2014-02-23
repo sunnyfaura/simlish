@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -10,7 +9,7 @@ public class SimlishParser {
 	ArrayList<ArrayList<Element>> party;
 	Token first;
 	Symbol top;
-	String output;
+	String output = "";
 	String identifier;
 
 	public void nextToken() {
@@ -65,6 +64,7 @@ public class SimlishParser {
 		
 	public void init() {
 		nextToken();
+		System.out.println("Init: "+first.token);
 		if ( first.token.equals("VAR_INIT") ) {
 			variable_declaration();
 			nextToken();
@@ -73,28 +73,13 @@ public class SimlishParser {
 				array_declaration();
 			} else {
 				//do nothing
+				//goes to program_main
 			}
 		} else if ( first.token.equals("ARRAY_INIT") ) {
 			array_declaration();
 		} else {
 			//do nothing
-			nextToken(); //to call program_main in case no variables/array declared
-		}
-	}
-	
-	public void program_main() {
-		if(first.token.equals("PROGRAM_MAIN")) {
-			nextToken();
-			G();
-			if(first.token.equals("BLOCK_TERMINATOR")) {
-				System.out.println("Thank you for playing Sims!");
-			}
-			else {
-				System.out.println("LIVE MODE wasn't terminated.");
-			}
-		}
-		else {
-			System.out.println("LIVE MODE wasn't initialized.");
+//			nextToken(); //to call program_main in case no variables/array declared
 		}
 	}
 	
@@ -270,7 +255,8 @@ public class SimlishParser {
 		Symbol pot = symbolTable.peekLast();
 		System.out.println("Identifier: "+pot.identifier);
 		if( first.token.equals("STRING_LITERAL") ) {
-			pot.assignString(first.lexeme);
+			pot.assignString(  (first.lexeme).replaceAll("#","")  );
+			System.out.println(pot.stringVal);
 			nextToken();
 			System.out.println(first.token);
 			//call next token to know if next symbol is PERIOD
@@ -429,17 +415,114 @@ public class SimlishParser {
 	}
 	//party.add(tParty); call at the end
 
-	//PROGRAM MAIN
+	public void program_main() {
+		System.out.println("Main: "+first.token);
+		if(first.token.equals("MAIN_INIT")) {
+			nextToken();
+			System.out.println("G: "+first.token);
+			G();
+			
+			System.out.println("Terminating: "+first.token);
+			if(first.token.equals("BLOCK_TERMINATOR")) {
+				System.out.println("Live Mode successful!");
+			}
+			else {
+				throw new ParserException("LIVE MODE wasn't terminated.");
+			}
+		}
+		else {
+			throw new ParserException("LIVE MODE wasn't initialized.");
+		}
+	}
+	
 	public void G() {
-		print();
+		nextToken();
+		System.out.println("H: "+first.token);
+		if ( first.token.equals("BLOCK_TERMINATOR") ) {
+			//do nothing
+		} else {
+			H();
+			G();
+		}
+	}
+	
+	String literal = "";
+	
+	public void H() {
+		if ( first.token.equals("PRINT_OP") ) {
+			//print
+			print();
+		} else if ( first.token.equals("IDENTIFIER") ) {
+			//variable or array assignment
+		} else if ( first.token.equals("NUMBER") ) {
+			//int or float expr
+		} else if ( first.token.equals("STRING_LITERAL") ) {
+			string_expr(false);
+			
+			nextToken();
+			if( first.token.equals("PERIOD") ) {
+				System.out.println("Successfully concatenated strings!");
+			} else {
+				throw new ParserException("Missing PERIOD for a string concatenation statement.");
+			}
+		} else if ( first.token.equals("BOOL_LITERAL") ) {
+			//bool expr
+		} else if ( first.token.equals("ITERATOR")) {
+			//iteration
+		} else if ( first.token.equals("IF")) {
+			//conditional
+		} else {
+			throw new ParserException("Invalid statement in LIVE MODE.");
+		}
+	}
+	
+	public void string_term() {
+		nextToken();
+		System.out.println("literal to concatenate: "+first.lexeme);
+		if( first.token.equals("STRING_LITERAL") ) {
+			literal += first.lexeme;
+		} else {
+			//do nothing
+		}
+	}
+	
+	public void string_expr(boolean print) {
+		System.out.println("literal to concatenate: "+first.lexeme);
+		literal += first.lexeme;
+		string_term();			
+		literal = literal.replaceAll("#", "");
+		System.out.println("literal msg: "+literal);
+		if (print) output += literal+"\n";
+		System.out.println("INTERPRETER: "+output);
+		literal = "";
 	}
 	
 	public void print() {
 		if(first.token.equals("PRINT_OP")) {
-			nextToken();
 			print_stuff();
 		}
-		else {
+	}
+	
+	public void print_stuff() {
+		X();
+		if( first.token.equals("PERIOD") ) {
+			System.out.println("Successfully printed strings!");
+		} else {
+			throw new ParserException("Missing PERIOD for a string concatenation statement.");
+		}
+	}
+	
+	public void X() {
+		nextToken();
+		System.out.println("X: "+first.token);
+		if ( first.token.equals("IDENTIFIER") ) {
+			//variable or array assignment
+		} else if ( first.token.equals("NUMBER") ) {
+			//int or float expr
+		} else if ( first.token.equals("STRING_LITERAL") ) {
+			string_expr(true);
+		} else if ( first.token.equals("BOOL_LITERAL") ) {
+			//bool expr
 		}
 	}
 	
@@ -530,100 +613,4 @@ public class SimlishParser {
 			
 		}
 	}
-
-	public void print_stuff() {
-		X();
-	}
-	
-	public void X()
-	{
-		if(first.token.equals("IDENTIFIER"))
-		{
-			Symbol symbol = findSymbol(first.lexeme);
-			if ( symbol == null ) {
-				throw new ParserException("\""+first.lexeme+"\" was not declared!");
-			} else {
-				
-				int iTemp = symbolTable.indexOf(first.lexeme);
-				nextToken();
-				
-			}	
-		}
-		else
-		{
-			nextToken();
-			literal();
-		}
-	}
-	
-	public void literal()
-	{
-		if(first.token.equals("#"))
-		{
-			nextToken();
-			
-			if(first.token.equals("STRING_LITERAL"))
-			{
-				nextToken();
-				int tempValue = first.lexeme.length()-1;
-				String printTemp = first.lexeme.substring(0, tempValue);
-				System.out.println(printTemp);
-				
-			}
-			else
-			{
-				nextToken();
-				System.out.println("Missing closing #");
-			}
-		}
-		else if(first.token.equals("["))
-		{
-			nextToken();
-			if(first.token.equals("NUMERIC_LITERAL"))
-			{
-				nextToken();
-				 String printTemp = first.lexeme;
-				 nextToken();
-				 if(first.token.equals("]"))
-				 {
-					 nextToken();
-					 System.out.println(printTemp);
-				 }
-				 else
-				 {
-					 nextToken();
-					 System.out.println("Missing closing ]");
-				 }
-				 
-			}
-			else if(first.token.equals("BOOL_LITERAL"))
-			{
-				String printTemp = first.lexeme;
-				 nextToken();
-				 if(first.token.equals("]"))
-				 {
-					 nextToken();
-					 System.out.println(printTemp);
-				 }
-				 else
-				 {
-					 nextToken();
-					 System.out.println("Missing closing ]");
-				 }
-			}
-			else
-			{
-				nextToken();
-				System.out.println("ERROR: Number or Gender expected");
-			}
-			
-			
-		}
-		else
-		{
-			nextToken();
-			expression();
-		}
-	}
-
 }
