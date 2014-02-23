@@ -296,7 +296,7 @@ public class SimlishParser {
 		}
 	}
 	
-	public double expression() {
+	public void expression() {
 		term();
 		sum_diff_op();
 	}

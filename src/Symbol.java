@@ -1,9 +1,12 @@
+import java.util.ArrayList;
+
 
 public class Symbol {
 	public String identifier = "";
 	public int intVal = 0;
 	public float floatVal = 0;
 	public String stringVal = "", boolVal = "female";
+	public ArrayList<Element> arrayVal = new ArrayList<Element>();
 	
 	public Symbol( String identifier ) {
 		this.identifier = identifier;
