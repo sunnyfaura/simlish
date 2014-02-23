@@ -7,6 +7,7 @@ public class Symbol {
 	public int intVal = 0;
 	public float floatVal = 0;
 	public String stringVal = "", boolVal = "female";
+	public boolean realBool = false;
 	public ArrayList<Element> arrayVal = new ArrayList<Element>();
 	
 	public String getIdentifier() {
@@ -57,9 +58,20 @@ public class Symbol {
 	public void assignBool( String value ) {
 		boolVal = value;
 		//default value is female (equivalent to false)
+		if(value.equals("female")) 
+			realBool = false;
+		else realBool = true;
 	}
 	
 	public String getDataType() {
 		return dataType;
+	}
+	
+	public void setInt(int val) {
+		this.intVal = val;
+	}
+	
+	public void setFloat(float val) {
+		this.floatVal = val;
 	}
 }

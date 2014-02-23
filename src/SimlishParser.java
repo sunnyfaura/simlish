@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
 
 
 public class SimlishParser {
@@ -13,6 +12,11 @@ public class SimlishParser {
 	String output = "";
 	String literal = "";
 	String identifier;
+	
+	public String maleFemaleHelper(boolean b) {
+		if(b) return "male";
+		else return "female";
+	}
 
 	public void nextToken() {
 		lookupTable.pop();
@@ -604,7 +608,8 @@ public class SimlishParser {
 		if ( s.dataType.equals("INTEGER") ) {
 			if( first.token.equals("INT_ASGN") ) {
 				nextToken();
-				System.out.println("int expr: "+int_expr(first.lexeme) );
+//				System.out.println("int expr: "+int_expr(first.lexeme) );
+				s.setInt( int_expr(first.lexeme) );
 				System.out.println("int asgn period: "+first.token);
 				if( first.token.equals("PERIOD") ) {
 					System.out.println("Successfull assignment for "+s.identifier+".");
@@ -617,7 +622,8 @@ public class SimlishParser {
 		} else if ( s.dataType.equals("FLOAT") ) {
 			if( first.token.equals("FLOAT_ASGN") ) {
 				nextToken();
-				System.out.println("float expr: "+float_expr(first.lexeme) );
+//				System.out.println("float expr: "+float_expr(first.lexeme) );
+				s.setFloat( float_expr(first.lexeme) );
 				if( first.token.equals("PERIOD") ) {
 					System.out.println("Successfull assignment for "+s.identifier+".");
 				} else {
@@ -640,7 +646,22 @@ public class SimlishParser {
 			}
 		} else if ( s.dataType.equals("BOOL") ) {
 			if( first.token.equals("BOOL_ASGN") ) {
-				bool_expr();
+				nextToken();
+				if( first.token.equals("NUMBER") ) {
+					s.realBool = rel_expr(first.lexeme);
+					s.boolVal = maleFemaleHelper(s.realBool);
+				} else if ( first.token.equals("BOOL_LITERAL") ) {
+					if(first.lexeme.equals("female")){
+						s.realBool = logical_expr(false);
+						s.boolVal = maleFemaleHelper(s.realBool);
+						System.out.println("from female to: "+s.boolVal+"::"+s.realBool);
+					}
+					else {
+						s.realBool = logical_expr(true);
+						s.boolVal = maleFemaleHelper(s.realBool);
+						System.out.println("from male to: "+s.boolVal+"::"+s.realBool);
+					}
+				}
 				if( first.token.equals("PERIOD") ) {
 					System.out.println("Successfull assignment for "+s.identifier+".");
 				} else {
@@ -823,7 +844,8 @@ public class SimlishParser {
 	public float float_sum_diff_op(float v) {
 //		nextToken();
 		float value = v;
-		if ( first.token.equals("PERIOD") ) {
+		if ( first.token.equals("PERIOD") ||  first.token.equals("EQUALS") 
+				|| first.token.equals("GTHAN") || first.token.equals("LTHAN") ) {
 			System.out.println("whaaaaaaaaaaaaaaat sumdiff: "+value);
 			return value;
 		} else {
@@ -853,7 +875,8 @@ public class SimlishParser {
 		// TODO Auto-generated method stub
 		//	nextToken();
 		float value = v;
-		if ( first.token.equals("PERIOD") ) {
+		if ( first.token.equals("PERIOD") ||  first.token.equals("EQUALS") 
+				|| first.token.equals("GTHAN") || first.token.equals("LTHAN") ) {
 			System.out.println("whaaaaaaaaaaaaaaat multdivmod: "+value);
 			return value;
 		} else {
@@ -887,7 +910,8 @@ public class SimlishParser {
 	public float float_exponent(float v) {
 //		nextToken();
 		float value = v;
-		if ( first.token.equals("PERIOD") ) {
+		if ( first.token.equals("PERIOD") ||  first.token.equals("EQUALS") 
+				|| first.token.equals("GTHAN") || first.token.equals("LTHAN") ) {
 			System.out.println("whaaaaaaaaaaaaaaat exp: "+value);
 			return value;
 		} else {
@@ -906,9 +930,76 @@ public class SimlishParser {
 		return value;
 	}
 	
-	public void bool_expr() {
-		
+	public boolean rel_expr(String thing) {
+		float lvalue = float_expr(thing);
+		float rvalue;
+//		nextToken();
+		System.out.println(first.token);
+		if( first.token.equals("EQUALS")) {
+			nextToken();
+			if( first.token.equals("NUMBER") ) {
+				rvalue = float_expr(first.lexeme);
+			} else {
+				throw new ParserException("Invalid relational statement! Can't you compare?");
+			}
+			System.out.println(lvalue+"::"+lvalue == rvalue+"::"+rvalue);
+			return lvalue == rvalue;
+		} else if( first.token.equals("GTHAN") ) {
+			nextToken();
+			if( first.token.equals("NUMBER") ) {
+				rvalue = float_expr(first.lexeme);
+			} else {
+				throw new ParserException("Invalid relational statement! Can't you compare?");
+			}
+			System.out.println(lvalue+"::"+(lvalue > rvalue)+"::"+rvalue);
+			return lvalue > rvalue;
+		} else if( first.token.equals("LTHAN") ) {
+			nextToken();
+			if( first.token.equals("NUMBER") ) {
+				rvalue = float_expr(first.lexeme);
+			} else {
+				throw new ParserException("Invalid relational statement! Can't you compare?");
+			}
+			System.out.println(lvalue+"::"+(lvalue < rvalue)+"::"+rvalue);
+			return lvalue < rvalue;
+		} else {
+			throw new ParserException("\""+first.lexeme+"\" is not a comparator.");
+		}
 	}
+	
+	public boolean logical_expr(boolean thing){
+		boolean value = thing;	
+//		nextToken();
+		if( first.token.equals("BOOL_LITERAL") ) {
+			if( first.lexeme.equals("female") )
+				value = logical(false);
+			else  value = logical(true);
+		}
+		return value;
+	}
+	
+	public boolean logical(boolean thing) {
+		boolean value = thing;
+		nextToken();
+		if( first.token.equals("AND_OP") ) {
+			nextToken();
+			if( first.lexeme.equals("female") )
+				value &= logical(false);
+			else  value &= logical(true);
+		} else if( first.token.equals("OR_OP") ) {
+			nextToken();
+			if( first.lexeme.equals("female") )
+				value |= logical(false);
+			else  value |= logical(true);
+		} else if( first.token.equals("NOT_OP") ) {
+			nextToken();
+			if( first.lexeme.equals("female") )
+				value = !logical(false);
+			else  value = !logical(true);
+		}
+		return value;
+	}
+	
 	//ITERATION
 	public void iteration()
 	{

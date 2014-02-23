@@ -104,7 +104,8 @@ public class SimlishApp implements ActionListener {
                 candidateSimlish = fc.getSelectedFile();       
                 textArea.setText("");
                 textArea_1.setText("");
-                
+                String intro = "== Interpreting and Tokenizing "+candidateSimlish.getName()+" ==\n";
+                textArea.append(intro);
                 LinkedList<Token> list;
                 String output = "";
                 
@@ -129,7 +130,6 @@ public class SimlishApp implements ActionListener {
                 	
                 	parser.parse(list);
                 	
-                	textArea.append("== Interpreting and Tokenizing "+candidateSimlish.getName()+" ==\n");
                 	output += parser.getOutput();
                 	textArea.append(output);
                 	//BAKIT AYAW MO MAG-APPEND BOBO
