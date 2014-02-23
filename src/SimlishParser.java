@@ -315,6 +315,15 @@ public class SimlishParser {
 		// TODO Auto-generated method stub
 		if(first.token.equals("IDENTIFIER"))
 		{
+			Symbol symbol = findSymbol(first.lexeme);
+			if ( symbol == null ) {
+				Symbol temp =  new Symbol(first.lexeme);
+				symbolTable.add(temp);
+			}
+			else
+			{
+				throw new ParserException("\""+first.lexeme+"\" has been declared before!");
+			}
 			nextToken();
 			R();
 			if(first.token.equals("PERIOD"))
