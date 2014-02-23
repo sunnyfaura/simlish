@@ -302,21 +302,33 @@ public class SimlishParser {
 		// TODO Auto-generated method stub
 		if(first.token.equals("IDENTIFIER"))
 		{
+			Symbol symbol = findSymbol(first.lexeme);
+			if ( symbol == null ) {
+				Symbol temp =  new Symbol(first.lexeme);
+				symbolTable.add(temp);
+			}
+			else
+			{
+				throw new ParserException("\""+first.lexeme+"\" has been declared before!");
+			}
 			nextToken();
 			R();
 			if(first.token.equals("PERIOD"))
 			{
 				nextToken();
+				party.add(tparty);
+				tparty=new ArrayList<Element>();
 				array();
 			}
 		}
 		else if(first.token.equals("BLOCK_TERMINATOR"))
 		{
+			nextToken();
 			
 		}
 		else
 		{
-			
+			throw new ParserException("THROW A PARTY wasn't terminated properly");
 		}
 	}
 
@@ -369,18 +381,35 @@ public class SimlishParser {
 		else if(first.token.equals("STRING_LITERAL"))
 		{
 			nextToken();
+			Element temp = new Element();
+			temp.setHuman(first.lexeme);
+			temp.setDataType("HUMAN");
+			tparty.add(temp);
 		}
 		else if(first.token.equals("INT_LITERAL"))
 		{
 			nextToken();
+			Element temp = new Element();
+			temp.setPet(Integer.parseInt(first.lexeme));
+			temp.setDataType("PET");
+			tparty.add(temp);
 		}
 		else if(first.token.equals("FLOAT_LITERAL"))
 		{
+			
 			nextToken();
+			Element temp = new Element();
+			temp.setSupernatural(Float.parseFloat(first.lexeme));
+			temp.setDataType("SUPERNATURAL");
+			tparty.add(temp);
 		}
 		else if(first.token.equals("BOOL_LITERAL"))
 		{
 			nextToken();
+			Element temp = new Element();
+			temp.setGender(first.lexeme);
+			temp.setDataType("GENDER");
+			tparty.add(temp);
 		}
 		
 	}
