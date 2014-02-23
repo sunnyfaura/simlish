@@ -224,8 +224,12 @@ public class SimlishParser {
 		System.out.println("Identifier: "+pot.identifier);
 		if( first.token.equals("NUMBER") ) {
 			pot.assignInt(first.lexeme);
+			pot.setDataType("PET");
 			nextToken();
+			//pot = symbolTable.peekLast();
+			
 			System.out.println(first.token);
+			System.out.println(pot.getDataType()+" "+pot.getIntVal());
 			//call next token to know if next symbol is PERIOD
 		} else {
 			throw new ParserException("Cannot assign "+first.lexeme+" to "+top.identifier);
@@ -239,6 +243,7 @@ public class SimlishParser {
 		System.out.println("Identifier: "+pot.identifier);
 		if( first.token.equals("NUMBER") ) {
 			pot.assignFloat(first.lexeme);
+			pot.setDataType("SUPERNATURAL");
 			nextToken();
 			System.out.println(first.token);
 			//call next token to know if next symbol is PERIOD
@@ -253,7 +258,10 @@ public class SimlishParser {
 		Symbol pot = symbolTable.peekLast();
 		System.out.println("Identifier: "+pot.identifier);
 		if( first.token.equals("STRING_LITERAL") ) {
-			pot.assignString(  (first.lexeme).replaceAll("#","") );
+
+			pot.assignString(  (first.lexeme).replaceAll("#","")  );
+			pot.setDataType("HUMAN");
+
 			System.out.println(pot.stringVal);
 			nextToken();
 			System.out.println(first.token);
@@ -270,6 +278,7 @@ public class SimlishParser {
 		System.out.println("Identifier: "+pot.identifier);
 		if( first.token.equals("BOOL_LITERAL") ) {
 			pot.assignBool(first.lexeme);
+			pot.setDataType("GENDER");
 			nextToken();
 			System.out.println(first.token);
 			//call next token to know if next symbol is PERIOD
@@ -519,13 +528,56 @@ public class SimlishParser {
 		nextToken();
 		System.out.println("X: "+first.token);
 		if ( first.token.equals("IDENTIFIER") ) {
+			Symbol symbol = findSymbol(first.lexeme);
+			if ( symbol == null ) {
+				throw new ParserException("\""+first.lexeme+"\" was not declared!");
+			} else {
+				int iTemp = 0;
+				for(int i = 0; i<symbolTable.size();i++)
+				{
+					Symbol teaPot = symbolTable.get(i);
+					String tPot = teaPot.getIdentifier();
+					
+					if(tPot.equals(first.lexeme))
+					{
+						iTemp = i;
+						break;
+					}
+				}
+				
+				Symbol pot = symbolTable.get(iTemp);
+				String tempDT = pot.getDataType();
+				
+				if(tempDT.equals("PET"))
+				{
+					output += pot.getIntVal() + " \n";
+					
+				}
+				else if(tempDT.equals("SUPERNATURAL"))
+				{
+					output += pot.getFloatVal() + "\n";
+				}
+				else if(tempDT.equals("HUMAN"))
+				{
+					output += pot.getStringVal() + "\n";
+				}
+				else if(tempDT.equals("GENDER"))
+				{
+					output += pot.getBoolVal() + "\n";
+				}
+				nextToken();
+				
+			}	
 			//variable or array assignment
 		} else if ( first.token.equals("NUMBER") ) {
 			//int or float expr
+			//output += first.lexeme + "\n";
+			
 		} else if ( first.token.equals("STRING_LITERAL") ) {
 			string_expr(true);
 		} else if ( first.token.equals("BOOL_LITERAL") ) {
 			//bool expr
+			output += first.lexeme + "\n";
 		}
 	}
 	

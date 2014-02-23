@@ -1,0 +1,19 @@
+SULSUL
+
+CREATE A SIM:
+
+	Harry (human) says #I'm a wizard!#.
+	Crookshanks (pet) meows 13.
+
+END
+
+LIVE MODE:
+	#You're a wizard Harry!# # Also you're very sweet!#.
+	
+	ACT #Wingardium Leviosa!#.
+	ACT #It's "Wingardium Levi-OHH-sa", not "Levio-SAH"!#.
+	ACT Crookshanks.
+	ACT Harry.
+END
+
+DAGDAG
