@@ -487,6 +487,7 @@ public class SimlishParser {
 			} else {
 				System.out.println( temp.identifier+" data type: "+ temp.getDataType() );
 				variable_assignment(temp);
+				array_assignment(temp);
 			}
 		} else if ( first.token.equals("NUMBER") ) {
 			//int expr only
@@ -517,6 +518,27 @@ public class SimlishParser {
 		}
 	}
 	
+	public void array_assignment(Symbol s) {
+		// TODO Auto-generated method stub
+		if(s.dataType.equals("ARRAY"))
+		{
+			R();
+			if(first.token.equals("PERIOD"))
+			{
+				nextToken();
+				party.add(tparty);
+				tparty=new ArrayList<Element>();
+				H();
+			}
+			else
+			{
+				throw new ParserException("Missing PERIOD");
+			}
+			
+		}
+		
+	}
+
 	public void string_term() {
 		nextToken();
 		System.out.println("literal to concatenate: "+first.lexeme);
@@ -679,6 +701,7 @@ public class SimlishParser {
 			}
 		}
 	}
+	
 
 	public int int_expr(String thing) {
 		int value = int_term(thing);

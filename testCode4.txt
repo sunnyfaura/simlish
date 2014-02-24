@@ -4,15 +4,18 @@ CREATE A SIM:
 
 	Harry (human) says #I'm a wizard!#.
 	Crookshanks (pet) meows 13.
+	Ron (human) says #BLOODY HELL!#.
+	Hermione (human).
 
 END
 
 THROW A PARTY:
-	Luna invites 
-		[10, 11, 12, 13].
+	Luna.
 END
 
 LIVE MODE:
+	Luna invites 
+		[Harry,Crookshanks,Ron,Hermione].
 	#You're a wizard Harry!# # Also you're very sweet!#.
 	
 	ACT #Wingardium Leviosa!#.
