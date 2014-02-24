@@ -621,7 +621,9 @@ public class SimlishParser {
 			//variable or array assignment
 		} else if ( first.token.equals("NUMBER") ) {
 			//int or float expr
-			//output += first.lexeme + "\n";
+			
+			output += float_expr(first.lexeme);
+			
 			
 		} else if ( first.token.equals("STRING_LITERAL") ) {
 			string_expr(true);

@@ -22,6 +22,7 @@ LIVE MODE:
 	ACT #It's "Wingardium Levi-OHH-sa", not "Levio-SAH"!#.
 	ACT Crookshanks.
 	ACT Harry.
+	ACT 4 marries 3.4.
 END
 
 DAGDAG
