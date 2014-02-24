@@ -475,6 +475,7 @@ public class SimlishParser {
 	}
 	
 	public void H() {
+		System.out.println("H: "+first.token);
 		if ( first.token.equals("PRINT_OP") ) {
 			//print
 			print();
@@ -488,10 +489,10 @@ public class SimlishParser {
 				variable_assignment(temp);
 			}
 		} else if ( first.token.equals("NUMBER") ) {
-			//int or float expr
+			//int expr only
+			int_expr(first.lexeme);
 		} else if ( first.token.equals("STRING_LITERAL") ) {
 			string_expr(false);
-			
 			nextToken();
 			if( first.token.equals("PERIOD") ) {
 				System.out.println("Successfully concatenated strings!");
@@ -499,12 +500,18 @@ public class SimlishParser {
 				throw new ParserException("Missing PERIOD for a string concatenation statement.");
 			}
 		} else if ( first.token.equals("BOOL_LITERAL") ) {
-			//bool expr
+			//logical expr
+			if(first.lexeme.equals("female"))
+				logical_expr(false);
+			else logical_expr(true);
 		} else if ( first.token.equals("ITERATOR")) {
-			iteration();
 			//iteration
+			iteration();
 		} else if ( first.token.equals("IF")) {
 			//conditional
+			conditional();
+		} else if ( first.token.equals("BLOCK_TERMINATOR") ) {
+			//do nothing
 		} else {
 			throw new ParserException("Invalid statement in LIVE MODE.");
 		}
@@ -1048,6 +1055,7 @@ public class SimlishParser {
 			throw new ParserException("Expected starting count.");
 		}
 	}
+	
 	public void C()
 	{
 		if(first.token.equals("IDENTIFIER"))
@@ -1072,6 +1080,113 @@ public class SimlishParser {
 					throw new ParserException("\""+first.lexeme+"\" is not a PET!");
 				}
 			}
+		}
+	}
+
+	public void conditional() {
+		M();
+//		matched();
+//		
+		if( first.token.equals("BLOCK_TERMINATOR") ) {
+			System.out.println("Successfully made a conditional!");
+		} else {
+			throw new ParserException("A conditional wasn't terminated.");
+		}
+	}
+	
+	public void M() {
+		if( first.token.equals("IF") ) {
+			nextToken();
+			if( first.token.equals("LPAREN") ) {
+				nextToken();				
+				if( first.token.equals("IDENTIFIER") ) {
+					Symbol s = findSymbol(first.lexeme);
+					if ( s == null ) {
+						throw new ParserException("\""+first.lexeme+"\" does not exist!");
+					} else {
+						if( s.dataType.equals("INTEGER") ) {
+							if ( rel_expr( Integer.toString( s.getIntVal() ) ) ) {
+								rparen();
+								H();
+							}
+						} else if( s.dataType.equals("FLOAT") ) {
+							if( rel_expr( Float.toString( s.getFloatVal() ) ) ) {
+								rparen();
+								H();
+							}
+						} else if ( s.dataType.equals("BOOL_LITERAL") ) {
+							if ( logical_expr(s.realBool) ) {
+								rparen();
+								H();
+							}
+						}
+					}
+				} else if( first.token.equals("NUMBER") ) {
+					if ( rel_expr(first.lexeme) ) {
+						rparen();
+						H();
+					} else {
+						until_end();
+					}
+				} else if ( first.token.equals("BOOL_LITERAL") ) {
+					if(first.lexeme.equals("female")){
+						if ( logical_expr(false) ) {
+							rparen();
+							H();
+						}
+					} else {
+						if( logical_expr(true) ) {
+							rparen();
+							H();
+						}
+					}	
+				} else {
+					throw new ParserException("Invalid conditions");
+				}
+			}
+		} else {
+			throw new ParserException("Not a conditional statement.");
+		}
+	}
+	
+	public void until_end() {
+		nextToken();
+		System.out.println(first.token);
+		if( first.token.equals("BLOCK_TERMINATOR") ) {
+			System.out.println("Successfully made a conditional!");
+		} else {
+			until_end();
+		}
+	}
+	
+	public void rparen() {
+		if( first.token.equals("RPAREN") ) {
+			System.out.println("Successful condition.");
+		} else {
+			throw new ParserException("Missing RPAREN for a conditional.");
+		}
+	}
+	
+	public void matched() {
+		nextToken();
+		H();
+		else_if_op();
+		nextToken();
+		H();
+		nextToken();
+		if( first.token.equals("ELSE") ) 
+			H();
+		else {
+			//do nothing
+		}
+	}
+	
+	public void else_if_op() {
+		if( first.token.equals("ELSE_IF") ) {
+			H();
+			else_if_op();
+		} else {
+			//do nothing
 		}
 	}
 }

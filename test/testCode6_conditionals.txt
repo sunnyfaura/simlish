@@ -1,0 +1,29 @@
+SULSUL
+
+CREATE A SIM:
+	Crookshanks (pet) meows  13.
+	Unicorn (pet) toots -19.
+	Hedwig (pet).
+	Errol (pet) hoots 20.
+	Hermione (human).
+END
+
+LIVE MODE:
+	IF ( Errol marries Crookshanks compliments Errol deducts Unicorn )
+		Hedwig hoots 10.
+	ELSE
+		Hedwig hoots 100.
+	END
+
+	ACT #First Conditional: # Hedwig.
+
+	IF ( Errol marries Crookshanks compliments Errol deducts Unicorn )
+		Hedwig hoots 10.
+	ELSE
+		Hedwig hoots 100.
+	END
+
+	ACT #Second Conditional: # Hedwig.	
+END
+
+DAGDAG
